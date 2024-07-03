@@ -1,0 +1,316 @@
+<!-- unit.component.html -->
+<c-row>
+    <c-col xs="12">
+      <c-card class="mb-3">
+        <c-card-header>
+          <strong>User</strong>
+        </c-card-header>
+        <c-card-body>
+          <c-nav variant="tabs">
+            <c-nav-item *ngFor="let nav of panes; index as i; first as isFirst; last as isLast">
+              <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="i" (click)="onTabChange(i)" cNavLink>
+                {{nav.name}}
+              </a>
+            </c-nav-item>
+          </c-nav>
+          
+          <c-tab-content #tabContent="cTabContent" [activeTabPaneIdx]="activeTabPaneIdx" cRounded="bottom">
+            <c-tab-pane *ngFor="let pane of panes; index as i;" class="p-3">
+              
+              <div [ngSwitch]="pane.id">
+                <div *ngSwitchCase="'tab-need-approval'" >
+                  <c-card-body>
+                    <c-row class="justify-content-end">
+                          <c-col md="4">
+                              <input
+                                type="text"
+                                [(ngModel)]="searchTerm"
+                                (keyup)="onSearch()"
+                                cFormControl
+                                placeholder="Search"
+                              />
+                          </c-col>
+                    </c-row>
+                  </c-card-body>
+                    <div class="table-responsive">
+                         <!-- Tampilkan tabel user need approval di sini -->
+                        <table [striped]="true" class="text-center" cTable >
+                            <thead>
+                            <tr>
+                            <th>
+                                <c-form-check>
+                                <input cFormCheckInput type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll()" />
+                                </c-form-check>
+                            </th>
+                            <th scope="col">No.</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Cabang</th>
+                            <th scope="col">Jabatan</th>
+                            <th scope="col">Unit</th>
+                            <th scope="col">Role</th>
+                            <th scope="col"> </th>
+                            <th scope="col"> </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let user of userList; let i = index">
+                            <td>
+                                <c-form-check>
+                                <input cFormCheckInput type="checkbox" [id]="'check' + user.idUser" [(ngModel)]="user.selected" />
+                                </c-form-check>
+                            </td>
+                            <td>{{i + 1}}</td>
+                            <td>{{user.userName}}</td>
+                            <td>{{user.nama}}</td>
+                            <td>{{user.cabang}}</td>
+                            <td>{{user.jabatan}}</td>
+                            <td>{{user.unit}}</td>
+                            <td>
+                                <select 
+                                [(ngModel)]="user.role" 
+                                aria-label="Role" 
+                                cSelect
+                            >
+                                <option value=null disabled selected>Assign Role</option>
+                                <option 
+                                *ngFor="let role of roleList" 
+                                [ngValue]="role">{{role}}
+                                </option>
+                            </select>
+                            </td>
+                            <td>
+                                <button cButton color="success" (click)="approve(user)">
+                                <c-icon name="cil-check" class="text-white"></c-icon>
+                                </button>
+                            </td>
+                            <td>
+                                <button cButton color="danger" (click)="deleteUserSatuan(user)" >
+                                    <c-icon name="cil-trash" class="text-white"></c-icon>
+                                    </button>
+                            </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                </div>
+                <div *ngSwitchCase="'tab-user-data'">
+                  <!-- Tampilkan tabel user dengan role di sini -->
+                  <c-card-body>
+                    <c-row>
+                        <c-col>
+                            <select 
+                                [(ngModel)]="selectedRole" 
+                                aria-label="Role" 
+                                cSelect
+                            >
+                              <option value="" disabled selected>Role</option>
+                              <option 
+                                *ngFor="let role of roleList" 
+                                [ngValue]="role">{{role}}
+                              </option>
+                            </select>
+                          </c-col>
+                          <c-col>
+                            <button cButton color="info" (click)="loadUser()">Show</button>
+                          </c-col>
+                          <c-col>
+                            <input type="text" [(ngModel)]="searchTerm" (keyup)="onSearch()" cFormControl placeholder="Search">
+                          </c-col>
+                    </c-row>
+                  </c-card-body>
+        
+                <c-card-body>
+                      <table [striped]="true" class="text-center" cTable>
+                        <thead>
+                        <tr>
+                          <th>
+                            <c-form-check>
+                              <input cFormCheckInput type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll()" />
+                            </c-form-check>
+                          </th>
+                          <th scope="col">No.</th>
+                          <th scope="col">Username</th>
+                          <th scope="col">Nama</th>
+                          <th scope="col">Cabang</th>
+                          <th scope="col">Jabatan</th>
+                          <th scope="col">Unit</th>
+                          <th scope="col">Role</th>
+                          <th scope="col"> </th>
+                          <th scope="col"> </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let user of userList; let i = index">
+                          <td>
+                            <c-form-check>
+                              <input cFormCheckInput type="checkbox" [id]="'check' + user.idUser" [(ngModel)]="user.selected" />
+                            </c-form-check>
+                          </td>
+                          <td>{{i + 1}}</td>
+                          <td>{{user.userName}}</td>
+                          <td>{{user.nama}}</td>
+                          <td>{{user.cabang}}</td>
+                          <td>{{user.jabatan}}</td>
+                          <td>{{user.unit}}</td>
+                          <td>{{user.role}}</td>
+                          <td>
+                            <button cButton color="info" class="me-2" (click)="editUser(user)">
+                              <c-icon name="cil-pencil" class="text-white"></c-icon>
+                            </button>
+                            
+                          </td>
+                          <td>
+                            <button cButton color="danger" (click)="deleteUserSatuan(user)">
+                                <c-icon name="cil-trash" class="text-white"></c-icon>
+                              </button>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>      
+                  </c-card-body> 
+  
+                  <c-modal [(visible)]="showEditModal">
+                    <c-modal-header>
+                      <strong>Edit User</strong>
+                    </c-modal-header>
+                    <c-modal-body>
+                      <c-row class="mb-3">
+                        <label cLabel class="col-sm-2 col-form-label" for="userName">
+                          Username
+                        </label>
+                        <div class="col-sm-10">
+                          <input 
+                            cFormControl id="namaUnit" 
+                            type="text" 
+                            [(ngModel)]="selectedUser.userName" 
+                            (ngModelChange)="onEditFormChange()"
+                            name="userName" 
+                            disabled
+                          />
+                        </div>
+                      </c-row>
+                      <c-row class="mb-3">
+                        <label cLabel class="col-sm-2 col-form-label" for="nama">
+                          Nama
+                        </label>
+                        <div class="col-sm-10">
+                          <input 
+                            cFormControl id="nama" 
+                            type="text" 
+                            [(ngModel)]="selectedUser.nama" 
+                            (ngModelChange)="onEditFormChange()"
+                            name="nama" 
+                            disabled
+                          />
+                        </div>
+                      </c-row>
+                      <c-row class="mb-3">
+                        <label cLabel class="col-sm-2 col-form-label" for="cabang">
+                          Cabang
+                        </label>
+                        <div class="col-sm-10">
+                          <input 
+                            cFormControl id="cabang" 
+                            type="text" 
+                            [(ngModel)]="selectedUser.cabang" 
+                            (ngModelChange)="onEditFormChange()"
+                            name="cabang" 
+                            disabled
+                          />
+                        </div>
+                      </c-row>
+                      <c-row class="mb-3">
+                        <label cLabel class="col-sm-2 col-form-label" for="jabatan">
+                          Jabatan
+                        </label>
+                        <div class="col-sm-10">
+                          <input 
+                            cFormControl id="jabatan" 
+                            type="text" 
+                            [(ngModel)]="selectedUser.jabatan" 
+                            (ngModelChange)="onEditFormChange()"
+                            name="jabatan" 
+                            disabled
+                          />
+                        </div>
+                      </c-row>
+                      <c-row class="mb-3">
+                        <label cLabel class="col-sm-2 col-form-label" for="unit">
+                          Unit
+                        </label>
+                        <div class="col-sm-10">
+                          <input 
+                            cFormControl id="unit" 
+                            type="text" 
+                            [(ngModel)]="selectedUser.unit" 
+                            (ngModelChange)="onEditFormChange()"
+                            name="unit" 
+                            disabled
+                          />
+                        </div>
+                      </c-row>
+                      <c-row class="mb-3">
+                        <label cLabel class="col-sm-2 col-form-label" for="role">
+                          Role
+                        </label>
+                        <div class="col-sm-10">
+                          <select 
+                            [(ngModel)]="role"
+                            (ngModelChange)="onEditFormChange()"
+                            aria-label="Role"
+                            cSelect
+                          >
+                            <option 
+                              *ngFor="let role of roleList" 
+                              [ngValue]="role"
+                            >
+                              {{role}}
+                            </option>
+                          </select>
+                        </div>
+                      </c-row>
+                    </c-modal-body>
+                    <c-modal-footer>
+                      <button cButton color="primary" (click)="onSubmitEdit()" class="me-3" style="width: 150px;">Save</button>
+                      <button cButton color="danger" (click)="cancelEdit()" style="width: 150px;">Cancel</button>
+                    </c-modal-footer>
+                  </c-modal>            
+                </div>
+                <div *ngSwitchDefault>
+                  <!-- Tampilkan pesan atau konten default jika tidak ada yang cocok -->
+                  <p>No matching content found for this tab.</p>
+                </div>
+              </div>
+              <c-pagination align="center" aria-label="Page Navigation">
+                <c-page-item *ngIf="totalPages > 1" [disabled]="currentPage === 1" aria-label="Previous">
+                  <a cPageLink (click)="onPageChange(currentPage - 1)"><span aria-hidden="true">&laquo;</span></a>
+                </c-page-item>
+                
+                <c-page-item *ngFor="let page of visiblePages" [active]="page === currentPage">
+                  <a cPageLink (click)="onPageChange(page)">{{ page }}</a>
+                </c-page-item>
+                
+                <c-page-item *ngIf="totalPages > 1" [disabled]="currentPage === totalPages" aria-label="Next">
+                  <a cPageLink (click)="onPageChange(currentPage + 1)"><span aria-hidden="true">&raquo;</span></a>
+                </c-page-item>
+              </c-pagination>
+            
+              <c-card-body> 
+                <div [ngSwitch]="pane.id">
+                  <div *ngSwitchCase="'tab-need-approval'">
+                    <button cButton color="danger" (click)="deleteSelectedUser()" class="me-3" style="width: 150px;">Delete Selected</button>
+                    <button cButton color="success" style="width: 150px;" (click)="bulkApprove()">Approve Selected</button>
+                  </div> 
+                  <div *ngSwitchCase="'tab-user-data'">
+                    <button cButton color="danger" (click)="deleteSelectedUser()" class="me-3" style="width: 150px;">Delete Selected</button>                    
+                  </div>
+                </div>  
+              </c-card-body>
+            </c-tab-pane>
+          </c-tab-content>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>

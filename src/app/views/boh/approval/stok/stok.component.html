@@ -1,0 +1,175 @@
+
+<c-row>
+    <c-col xs="12">
+      <c-card class="mb-3">
+        <c-card-header>
+          <strong>Approval Stok Item</strong>
+        </c-card-header>
+        <c-card-body>
+          <c-nav variant="tabs">
+            <c-nav-item *ngFor="let nav of panes; index as i; first as isFirst; last as isLast">
+              <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="i" (click)="onTabChange(i)" cNavLink>
+                {{nav.name}}
+              </a>
+            </c-nav-item>
+          </c-nav>
+          
+          <c-tab-content #tabContent="cTabContent" [activeTabPaneIdx]="activeTabPaneIdx" cRounded="bottom">
+            <c-tab-pane *ngFor="let pane of panes; index as i;" class="p-3">
+              
+              <div [ngSwitch]="pane.id">
+                <div *ngSwitchCase="'tab-create-approval'" >
+                  <c-card-body>
+                    <c-row class="justify-content-end">
+                          <c-col md="4">
+                              <input
+                                type="text"
+                                [(ngModel)]="searchTerm"
+                                (keyup)="onSearch()"
+                                cFormControl
+                                placeholder="Search"
+                              />
+                          </c-col>
+                    </c-row>
+                  </c-card-body>
+                    <div class="table-responsive">
+                        <table [striped]="true" cTable >
+                            <thead>
+                            <tr>
+                            <th>
+                                <c-form-check>
+                                <input cFormCheckInput type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll()" />
+                                </c-form-check>
+                            </th>
+                            <th scope="col">No.</th>
+                            <th scope="col">Kode</th>
+                            <th scope="col">Nama barang</th>
+                            <th scope="col">Kategori barang</th>
+                            <th scope="col">Jumlah</th>
+                            <th scope="col">Satuan</th>
+                            <th scope="col"> </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let barangGudang of barangGudangList; let i = index">
+                            <td>
+                                <c-form-check>
+                                <input cFormCheckInput type="checkbox" [id]="'check' + barangGudang.idBarangGudang" [(ngModel)]="barangGudang.selected" />
+                                </c-form-check>
+                            </td>
+                            <td>{{i + 1}}</td>
+                            <td>{{barangGudang.kodeBarang}}</td>
+                            <td>{{barangGudang.namaBarang}}</td>
+                            <td>{{barangGudang.kategori}}</td>
+                            <td>{{barangGudang.jumlah}}</td>
+                            <td>{{barangGudang.satuan}}</td>
+                            <td>
+                                <button cButton color="success" class="me-2" (click)="approveCreate(barangGudang.idBarangGudang!, true)">
+                                <c-icon name="cil-check" class="text-white"></c-icon>
+                                </button>
+                                <button cButton color="danger" (click)="approveCreate(barangGudang.idBarangGudang!, false)" >
+                                    <c-icon name="cil-trash" class="text-white"></c-icon>
+                                    </button>
+                            </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                </div>
+                <div *ngSwitchCase="'tab-delete-approval'" >
+                  <c-card-body>
+                    <c-row class="justify-content-end">
+                          <c-col md="4">
+                              <input
+                                type="text"
+                                [(ngModel)]="searchTerm"
+                                (keyup)="onSearch()"
+                                cFormControl
+                                placeholder="Search"
+                              />
+                          </c-col>
+                    </c-row>
+                  </c-card-body>
+                    <div class="table-responsive">
+                        <table [striped]="true" cTable >
+                            <thead>
+                            <tr>
+                            <th>
+                                <c-form-check>
+                                <input cFormCheckInput type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll()" />
+                                </c-form-check>
+                            </th>
+                            <th scope="col">No.</th>
+                            <th scope="col">Kode</th>
+                            <th scope="col">Nama barang</th>
+                            <th scope="col">Kategori barang</th>
+                            <th scope="col">Jumlah</th>
+                            <th scope="col">Satuan</th>
+                            <th scope="col"> </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let barangGudang of barangGudangList; let i = index">
+                            <td>
+                                <c-form-check>
+                                <input cFormCheckInput type="checkbox" [id]="'check' + barangGudang.idBarangGudang" [(ngModel)]="barangGudang.selected" />
+                                </c-form-check>
+                            </td>
+                            <td>{{i + 1}}</td>
+                            <td>{{barangGudang.kodeBarang}}</td>
+                            <td>{{barangGudang.namaBarang}}</td>
+                            <td>{{barangGudang.kategori}}</td>
+                            <td>{{barangGudang.jumlah}}</td>
+                            <td>{{barangGudang.satuan}}</td>
+                            <td>
+                                <button cButton color="success" class="me-2" (click)="approveDelete(barangGudang.idBarangGudang!, true)">
+                                <c-icon name="cil-check" class="text-white"></c-icon>
+                                </button>
+                            
+                                <button cButton color="danger" (click)="approveDelete(barangGudang.idBarangGudang!, false)" >
+                                    <c-icon name="cil-trash" class="text-white"></c-icon>
+                                    </button>
+                            </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                </div>
+                <div *ngSwitchDefault>
+                  <p>No matching content found for this tab.</p>
+                </div>
+              </div>
+              <c-pagination align="center" aria-label="Page Navigation">
+                <c-page-item *ngIf="totalPages > 1" [disabled]="currentPage === 1" aria-label="Previous">
+                  <a cPageLink (click)="onPageChange(currentPage - 1)"><span aria-hidden="true">&laquo;</span></a>
+                </c-page-item>
+                
+                <c-page-item *ngFor="let page of visiblePages" [active]="page === currentPage">
+                  <a cPageLink (click)="onPageChange(page)">{{ page }}</a>
+                </c-page-item>
+                
+                <c-page-item *ngIf="totalPages > 1" [disabled]="currentPage === totalPages" aria-label="Next">
+                  <a cPageLink (click)="onPageChange(currentPage + 1)"><span aria-hidden="true">&raquo;</span></a>
+                </c-page-item>
+              </c-pagination>
+            
+              <c-card-body> 
+                <div [ngSwitch]="pane.id">
+                  <div *ngSwitchCase="'tab-create-approval'">
+                    <button cButton color="success" style="width: 150px;" class="me-3" (click)="bulkApproveCreate(true)">Approve Selected</button>
+                    <button cButton color="danger" (click)="bulkApproveCreate(false)"  style="width: 150px;">Reject Selected</button>
+                  </div> 
+                  <div *ngSwitchCase="'tab-delete-approval'">
+                    <button cButton color="success" style="width: 150px;" class="me-3" (click)="bulkApproveDelete(true)">Approve Selected</button>
+                    <button cButton color="danger" (click)="bulkApproveDelete(false)"  style="width: 150px;">Reject Selected</button>                    
+                  </div>
+                </div>  
+              </c-card-body>
+            </c-tab-pane>
+          </c-tab-content>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>

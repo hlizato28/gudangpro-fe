@@ -1,0 +1,288 @@
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+        <c-card class="mb-4">
+          <c-card-header>
+            <strong>Items</strong>
+          </c-card-header>
+          <c-card-body>
+            <p class="text-medium-emphasis small">
+              Data barang GS.
+            </p>
+            <c-row>
+                <c-col>
+                    <select 
+                        [(ngModel)]="selectedKategori" 
+                        aria-label="Kategori Barang" 
+                        cSelect
+                    >
+                      <option value="" disabled selected>Kategori Barang</option>
+                      <option 
+                        *ngFor="let kategori of kategoriList" 
+                        [ngValue]="kategori">{{kategori}}
+                      </option>
+                    </select>
+                  </c-col>
+                  <c-col>
+                    <button cButton color="info" (click)="loadBarang()">Show</button>
+                  </c-col>
+                  <c-col>
+                    <input type="text" [(ngModel)]="searchTerm" (keyup)="onSearch()" cFormControl placeholder="Search">
+                  </c-col>
+            </c-row>
+          </c-card-body>
+
+        <c-card-body>
+              <table [striped]="true" class="text-center" cTable [responsive]="true">
+                <thead>
+                <tr>
+                  <th>
+                    <c-form-check>
+                      <input cFormCheckInput type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll()" />
+                    </c-form-check>
+                  </th>
+                  <th scope="col">No.</th>
+                  <th scope="col">Kode</th>
+                  <th scope="col">Nama barang</th>
+                  <th scope="col">Kategori barang</th>
+                  <th scope="col">Satuan</th>
+                  <th scope="col">Deskripsi</th>
+                  <th scope="col"> </th>
+                  
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let barang of barangList; let i = index">
+                  <td>
+                    <c-form-check>
+                      <input cFormCheckInput type="checkbox" [id]="'check' + barang.idBarang" [(ngModel)]="barang.selected" />
+                    </c-form-check>
+                  </td>
+                  <td>{{i + 1}}</td>
+                  <td>{{barang.kodeBarang}}</td>
+                  <td>{{barang.namaBarang}}</td>
+                  <td>{{barang.kategoriBarang}}</td>
+                  <td>{{barang.satuan}}</td>
+                  <td>{{barang.deskripsi}}</td>
+                  <td>
+                    <button cButton color="info" class="me-2" (click)="editBarang(barang)">
+                      <c-icon name="cil-pencil" class="text-white"></c-icon>
+                    </button>
+                    <button cButton color="danger" (click)="deletBarangSatuan(barang)">
+                      <c-icon name="cil-trash" class="text-white"></c-icon>
+                    </button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+
+              <c-pagination align="center" aria-label="Page Navigation">
+                <c-page-item *ngIf="totalPages > 1" [disabled]="currentPage === 1" aria-label="Previous">
+                  <a cPageLink (click)="onPageChange(currentPage - 1)"><span aria-hidden="true">&laquo;</span></a>
+                </c-page-item>
+              
+                <c-page-item *ngFor="let page of visiblePages" [active]="page === currentPage">
+                  <a cPageLink (click)="onPageChange(page)">{{ page }}</a>
+                </c-page-item>
+              
+                <c-page-item *ngIf="totalPages > 1" [disabled]="currentPage === totalPages" aria-label="Next">
+                  <a cPageLink (click)="onPageChange(currentPage + 1)"><span aria-hidden="true">&raquo;</span></a>
+                </c-page-item>
+              </c-pagination>
+
+          </c-card-body> 
+          <c-card-body>            
+            <button cButton color="danger" (click)="deleteSelectedBarang()" class="me-3" style="width: 150px;">Delete Selected</button>
+            <button cButton color="primary" style="width: 150px;" (click)="addBarang()">Add Item</button>
+          </c-card-body>
+        </c-card>
+      </c-col>   
+
+      <c-modal [(visible)]="showEditModal">
+        <c-modal-header>
+          <strong>Edit Item</strong>
+        </c-modal-header>
+        <c-modal-body>
+          <c-row class="mb-3">
+            <label cLabel class="col-sm-2 col-form-label" for="kodeBarang">
+              Kode Barang
+            </label>
+            <div class="col-sm-10">
+              <input 
+                cFormControl id="kodeBarang" 
+                type="text" 
+                [(ngModel)]="selectedBarang.kodeBarang" 
+                (ngModelChange)="onEditFormChange()"
+                name="kodeBarang" 
+                required
+              />
+            </div>
+          </c-row>
+          <c-row class="mb-3">
+            <label cLabel class="col-sm-2 col-form-label" for="namaBarang">
+              Nama Barang
+            </label>
+            <div class="col-sm-10">
+              <input 
+                cFormControl id="namaBarang" 
+                type="text" 
+                [(ngModel)]="selectedBarang.namaBarang" 
+                (ngModelChange)="onEditFormChange()"
+                name="namaBarang" 
+                required
+              />
+            </div>
+          </c-row>
+          <c-row class="mb-3">
+            <label cLabel class="col-sm-2 col-form-label" for="kategoriBarang">
+              Kategori Barang
+            </label>
+            <div class="col-sm-10">
+              <select 
+                [(ngModel)]="kategori"
+                (ngModelChange)="onEditFormChange()"
+                aria-label="Kategori Barang"
+                cSelect
+              >
+                <option 
+                  *ngFor="let kategori of kategoriList" 
+                  [ngValue]="kategori"
+                >
+                  {{kategori}}
+                </option>
+              </select>
+            </div>
+          </c-row>
+          <c-row class="mb-3">
+            <label cLabel class="col-sm-2 col-form-label" for="satuan">
+              Satuan
+            </label>
+            <div class="col-sm-10">
+              <input 
+                cFormControl id="satuan" 
+                type="text" 
+                [(ngModel)]="selectedBarang.satuan" 
+                (ngModelChange)="onEditFormChange()"
+                name="satuan" 
+                required
+              />
+            </div>
+          </c-row>
+          <c-row class="mb-3">
+            <label cLabel class="col-sm-2 col-form-label" for="deskripsi">
+              Deskripsi
+            </label>
+            <div class="col-sm-10">
+              <input 
+                cFormControl id="deskripsi" 
+                type="text" 
+                [(ngModel)]="selectedBarang.deskripsi" 
+                name="deskripsi" 
+                (ngModelChange)="onEditFormChange()"
+                required
+              />
+            </div>
+          </c-row>
+        </c-modal-body>
+        <c-modal-footer>
+          <button cButton color="primary" (click)="onSubmitEdit()" class="me-3" style="width: 150px;">Save</button>
+          <button cButton color="danger" (click)="cancelEdit()" style="width: 150px;">Cancel</button>
+        </c-modal-footer>
+      </c-modal>
+
+      <c-modal [(visible)]="showAddModal">
+        <c-modal-header>
+          <h5 class="modal-title">Add Item</h5>
+        </c-modal-header>
+        <c-modal-body>
+          <c-row class="mb-3">
+            <label cLabel class="col-sm-2 col-form-label" for="kodeBarangAdd">
+              Kode Barang
+            </label>
+            <div class="col-sm-10">
+              <input 
+                cFormControl id="kodeBarangAdd" 
+                type="text" 
+                [(ngModel)]="newBarang.kodeBarang" 
+                (ngModelChange)="onAddFormChange()"
+                name="kodeBarangAdd" 
+                required
+              />
+            </div>
+          </c-row>
+          <c-row class="mb-3">
+            <label cLabel class="col-sm-2 col-form-label" for="namaBarangAdd">
+              Nama Barang
+            </label>
+            <div class="col-sm-10">
+              <input 
+                cFormControl id="namaBarangAdd" 
+                type="text" 
+                [(ngModel)]="newBarang.namaBarang" 
+                (ngModelChange)="onAddFormChange()"
+                name="namaBarangAdd" 
+                required
+              />
+            </div>
+          </c-row>
+          <c-row class="mb-3">
+            <label cLabel class="col-sm-2 col-form-label" for="kategoriBarangAdd">
+              Kategori Barang
+            </label>
+            <div class="col-sm-10">
+              <select 
+                [(ngModel)]="newBarang.kategoriBarang"
+                (ngModelChange)="onAddFormChange()"
+                aria-label="Kategori Barang"
+                cSelect
+              >
+                <option 
+                  *ngFor="let kategori of kategoriList" 
+                  [ngValue]="kategori"
+                >
+                  {{kategori}}
+                </option>
+              </select>
+            </div>
+          </c-row>
+          <c-row class="mb-3">
+            <label cLabel class="col-sm-2 col-form-label" for="satuanAdd">
+              Satuan
+            </label>
+            <div class="col-sm-10">
+              <input 
+                cFormControl id="satuanAdd" 
+                type="text" 
+                [(ngModel)]="newBarang.satuan" 
+                (ngModelChange)="onAddFormChange()"
+                name="satuanAdd" 
+                required
+              />
+            </div>
+          </c-row>
+          <c-row class="mb-3">
+            <label cLabel class="col-sm-2 col-form-label" for="deskripsiAdd">
+              Deskripsi
+            </label>
+            <div class="col-sm-10">
+              <input 
+                cFormControl id="deskripsiAdd" 
+                type="text" 
+                [(ngModel)]="newBarang.deskripsi" 
+                (ngModelChange)="onAddFormChange()"
+                name="deskripsiAdd" 
+                required
+              />
+            </div>
+          </c-row>
+        </c-modal-body>
+        <c-modal-footer>
+          <button cButton color="primary" (click)="onSubmitAdd()">Save</button>
+          <button cButton color="danger" (click)="cancelAddBarang()">Cancel</button>
+        </c-modal-footer>
+      </c-modal>
+
+    
+      
+</c-row>
+
+ 

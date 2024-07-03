@@ -1,0 +1,138 @@
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+        <c-card class="mb-4">
+          <c-card-header>
+            <strong>Group Unit</strong>
+          </c-card-header>
+          <c-card-body>
+            <p class="text-medium-emphasis small">
+              Grouping setiap unit.
+            </p>
+            <c-row class="justify-content-end">
+                <c-col md="4">
+                    <input
+                      type="text"
+                      [(ngModel)]="searchTerm"
+                      (keyup)="onSearch()"
+                      cFormControl
+                      placeholder="Search"
+                    />
+                </c-col>
+          </c-row>
+          </c-card-body>
+
+        <c-card-body>
+              <table [striped]="true" class="text-center" cTable [responsive]="true">
+                <thead>
+                <tr>
+                  <th>
+                    <c-form-check>
+                      <input cFormCheckInput type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll()" />
+                    </c-form-check>
+                  </th>
+                  <th scope="col">No.</th>
+                  <th scope="col">Nama Unit Group</th>
+                  <th scope="col"> </th>
+                  
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let group of unitGroupList; let i = index">
+                  <td>
+                    <c-form-check>
+                      <input cFormCheckInput type="checkbox" [id]="'check' + group.idUnitGroup" [(ngModel)]="group.selected" />
+                    </c-form-check>
+                  </td>
+                  <td>{{i + 1}}</td>
+                  <td>{{group.namaUnitGroup}}</td>
+                  <td>
+                    <button cButton color="info" class="me-2" (click)="editGroup(group)">
+                      <c-icon name="cil-pencil" class="text-white"></c-icon>
+                    </button>
+                    <button cButton color="danger" (click)="deleteGroupSatuan(group)">
+                      <c-icon name="cil-trash" class="text-white"></c-icon>
+                    </button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+
+              <c-pagination align="center" aria-label="Page Navigation">
+                <c-page-item *ngIf="totalPages > 1" [disabled]="currentPage === 1" aria-label="Previous">
+                  <a cPageLink (click)="onPageChange(currentPage - 1)"><span aria-hidden="true">&laquo;</span></a>
+                </c-page-item>
+              
+                <c-page-item *ngFor="let page of visiblePages" [active]="page === currentPage">
+                  <a cPageLink (click)="onPageChange(page)">{{ page }}</a>
+                </c-page-item>
+              
+                <c-page-item *ngIf="totalPages > 1" [disabled]="currentPage === totalPages" aria-label="Next">
+                  <a cPageLink (click)="onPageChange(currentPage + 1)"><span aria-hidden="true">&raquo;</span></a>
+                </c-page-item>
+              </c-pagination>
+
+          </c-card-body> 
+          <c-card-body>            
+            <button cButton color="danger" (click)="deleteSelectedGroup()" class="me-3" style="width: 150px;">Delete Selected</button>
+            <button cButton color="primary" style="width: 150px;" (click)="addGroup()">Add Item</button>
+          </c-card-body>
+        </c-card>
+      </c-col>   
+
+      <c-modal [(visible)]="showEditModal">
+        <c-modal-header>
+          <strong>Edit Group Unit</strong>
+        </c-modal-header>
+        <c-modal-body>
+          <c-row class="mb-3">
+            <label cLabel class="col-sm-2 col-form-label" for="namaUnitGroup">
+              Nama Unit Group
+            </label>
+            <div class="col-sm-10">
+              <input 
+                cFormControl id="namaUnitGroup" 
+                type="text" 
+                [(ngModel)]="selectedUnitGroup.namaUnitGroup" 
+                (ngModelChange)="onEditFormChange()"
+                name="namaUnitGroup"
+                required
+              />
+            </div>
+          </c-row>
+        </c-modal-body>
+        <c-modal-footer>
+          <button cButton color="primary" (click)="onSubmitEdit()" class="me-3" style="width: 150px;">Save</button>
+          <button cButton color="danger" (click)="cancelEdit()" style="width: 150px;">Cancel</button>
+        </c-modal-footer>
+      </c-modal>
+
+      <c-modal [(visible)]="showAddModal">
+        <c-modal-header>
+          <h5 class="modal-title">Add Group Unit</h5>
+        </c-modal-header>
+        <c-modal-body>
+          <c-row class="mb-3">
+            <label cLabel class="col-sm-2 col-form-label" for="namaUnitGroupAdd">
+              Nama Group Unit
+            </label>
+            <div class="col-sm-10">
+              <input 
+                cFormControl id="namaUnitGroupAdd" 
+                type="text" 
+                [(ngModel)]="newUnitGroup.namaUnitGroup" 
+                (ngModelChange)="onAddFormChange()"
+                name="namaUnitGroupAdd" 
+                required
+              />
+            </div>
+          </c-row>
+        </c-modal-body>
+        <c-modal-footer>
+          <button cButton color="primary" (click)="onSubmitAdd()">Save</button>
+          <button cButton color="danger" (click)="cancelAddGroup()">Cancel</button>
+        </c-modal-footer>
+      </c-modal>
+      
+</c-row>
+
+ 

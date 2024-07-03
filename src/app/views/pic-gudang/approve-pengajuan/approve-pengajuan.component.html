@@ -1,0 +1,51 @@
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+        <c-card class="mb-4">
+          <c-card-header>
+            <strong>Daftar Pengajuan</strong>
+          </c-card-header>
+          <c-card-body>
+            <ng-container *ngIf="pengajuanList && pengajuanList.length; else noData">
+              <c-row *ngFor="let pengajuan of pengajuanList; let i = index" class="mb-3">
+                <c-col>
+                  <c-card>
+                    <c-card-body class="d-flex justify-content-between align-items-center custom-hover-effect" variant="ghost" (click)="goToDetail(pengajuan.idPengajuanGudangCabang); $event.preventDefault()">
+                      <div>
+                        <c-icon name="cil-user" class="me-2"></c-icon>
+                        {{ pengajuan.user }}
+                      </div>
+                    </c-card-body>
+                  </c-card>
+                </c-col>
+              </c-row>
+            </ng-container>
+            <ng-template #noData>
+              <p class="text-center">Tidak ada data pengajuan.</p>
+            </ng-template>
+          </c-card-body>
+
+          <c-card-footer *ngIf="totalPages > 1">
+            <c-pagination align="center" aria-label="Page navigation">
+              <c-page-item [disabled]="currentPage === 1" aria-label="Previous">
+                <a cPageLink (click)="onPageChange(currentPage - 1)">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </c-page-item>
+              
+              <c-page-item *ngFor="let page of visiblePages" [active]="page === currentPage">
+                <a cPageLink (click)="onPageChange(page)">{{ page }}</a>
+              </c-page-item>
+              
+              <c-page-item [disabled]="currentPage === totalPages" aria-label="Next">
+                <a cPageLink (click)="onPageChange(currentPage + 1)">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </c-page-item>
+            </c-pagination>
+          </c-card-footer>
+        </c-card>
+      </c-col>   
+      
+</c-row>
+
+ 

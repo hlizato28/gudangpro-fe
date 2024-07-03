@@ -1,0 +1,61 @@
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+        <c-card class="mb-4">
+          <c-card-header>
+            <strong>Item Cabang</strong>
+          </c-card-header>
+          <c-card-body>
+            <p class="text-medium-emphasis small">
+                Setting Item untuk semua cabang.
+              </p>
+            <c-row class="mb-3">
+                <label cLabel class="col-sm-2 col-form-label" for="kategoriBarangAdd">
+                    Kategori Barang
+                </label>
+                <div class="col-sm-10">
+                    <select 
+                    [(ngModel)]="selectedKategori"
+                    (ngModelChange)="onKategoriChange()"
+                    aria-label="Kategori Barang"
+                    cSelect
+                    >
+                    <option 
+                        *ngFor="let kategori of kategoriList" 
+                        [ngValue]="kategori"
+                    >
+                        {{kategori}}
+                    </option>
+                    </select>
+                </div>
+            </c-row>
+          <c-row class="mb-3" *ngIf="selectedKategori">
+            <label cLabel class="col-sm-2 col-form-label" for="namaBarangAdd">
+              Nama Barang
+            </label>
+            <div class="col-sm-10">
+                <select 
+                    [(ngModel)]="newBarangCabang.namaBarang"
+                    aria-label="Nama Barang"
+                    cSelect
+                >
+                    <option value="" disabled selected>Pilih Nama Barang</option>
+                    <option 
+                        *ngFor="let barang of namaBarangList" 
+                        [ngValue]="barang"
+                    >
+                        {{barang}}
+                    </option>
+                </select>
+            </div>
+          </c-row>
+          </c-card-body>
+          <c-card-body>            
+            <button cButton color="primary" (click)="onSubmitAdd()">Save Item</button>
+          </c-card-body>
+        </c-card>
+      </c-col>  
+    
+      
+</c-row>
+
+ 

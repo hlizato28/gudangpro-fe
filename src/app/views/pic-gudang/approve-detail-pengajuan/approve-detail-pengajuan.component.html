@@ -1,0 +1,88 @@
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Pengajuan Item {{ pengajuan?.user }}</strong>
+        </c-card-header>
+        <c-card-body>
+          <ng-container *ngIf="pagedDetails.length; else noData">
+            <c-row *ngFor="let detail of pagedDetails" class="mb-3">
+              <c-col>
+                <c-card>
+                  <c-card-body>
+                    <c-row class="mb-2">
+                      <c-col md="3">
+                        <label cLabel>Kode Barang:</label>
+                        <input cFormControl [value]="detail.kodeBarang" disabled>
+                      </c-col>
+                      <c-col md="3">
+                        <label cLabel>Nama Barang:</label>
+                        <input cFormControl [value]="detail.namaBarang" disabled>
+                      </c-col>
+                      <c-col md="3">
+                        <label cLabel>Jumlah Diminta:</label>
+                        <input cFormControl type="number" [value]="detail.jumlahDiminta" disabled>
+                      </c-col>
+                      <c-col md="3">
+                        <label cLabel>Satuan:</label>
+                        <input cFormControl [value]="detail.satuan" disabled>
+                      </c-col>
+                    </c-row>
+                    <c-row>
+                      <c-col md="3">
+                        <label cLabel>Stok:</label>
+                        <input cFormControl type="number" [value]="detail.stok" disabled>
+                      </c-col>
+                      <c-col md="3">
+                        <label cLabel>Jumlah Diapprove:</label>
+                        <input cFormControl type="number" [(ngModel)]="detail.jumlahApproved">
+                      </c-col>
+                      <c-col md="6" class="d-flex align-items-end justify-content-end">
+                        <button cButton color="danger" variant="outline" class="me-2" (click)="approval(detail, false)">
+                          Reject
+                        </button>
+                        <button cButton color="success" (click)="approval(detail, true)">
+                          Approve
+                        </button>
+                      </c-col>
+                    </c-row>
+                  </c-card-body>
+                </c-card>
+              </c-col>
+            </c-row>
+          </ng-container>
+          <ng-template #noData>
+            <p class="text-center">Tidak ada data detail pengajuan.</p>
+          </ng-template>
+        </c-card-body>
+  
+        <c-card-footer *ngIf="totalPages > 1">
+          <c-col>
+            <c-pagination align="center" aria-label="Page navigation">
+              <c-page-item [disabled]="currentPage === 1" aria-label="Previous">
+                <a cPageLink (click)="onPageChange(currentPage - 1); $event.preventDefault()">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </c-page-item>
+              
+              <c-page-item *ngFor="let page of visiblePages" [active]="page === currentPage">
+                <a cPageLink (click)="onPageChange(page); $event.preventDefault()">{{ page }}</a>
+              </c-page-item>
+              
+              <c-page-item [disabled]="currentPage === totalPages" aria-label="Next">
+                <a cPageLink (click)="onPageChange(currentPage + 1); $event.preventDefault()">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </c-page-item>
+            </c-pagination>
+          </c-col>
+          <c-col>
+            <button cButton color="danger" (click)="goBack()" class="mb-3">
+              Cancel
+           </button>
+          </c-col>
+          
+        </c-card-footer>
+      </c-card>
+    </c-col>
+  </c-row>

@@ -1,0 +1,19 @@
+$blue-bg-color: #3c7ab7;
+$text-color: white;
+
+table {
+  &.cTable {
+    th, td {
+      &.blue-bg {
+        background-color: $blue-bg-color !important;
+        color: $text-color;
+      }
+    }
+  }
+}
+
+.centered-table {
+    th, td {
+      text-align: center;
+    }
+}

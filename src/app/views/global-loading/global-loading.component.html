@@ -1,0 +1,6 @@
+<div *ngIf="isLoading$ | async" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div *ngIf="showTimeoutMessage" class="timeout-message">
+      Loading takes longer than expected. Please check your connection.
+    </div>
+  </div>

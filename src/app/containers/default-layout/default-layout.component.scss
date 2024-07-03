@@ -1,0 +1,93 @@
+:host {
+  // ng-scrollbar {
+  //   --scrollbar-thumb-color: #d3d5d8;
+  //   --scrollbar-track-color: #fff;
+  //   --scrollbar-hover-size: calc(var(--scrollbar-size) * 1.5);
+  // }
+  ng-scrollbar {
+    --scrollbar-thumb-color: var(--cui-border-color, #999);
+    --scrollbar-track-color: var(--cui-body-color, #fff);
+    --scrollbar-hover-size: calc(var(--scrollbar-size) * 1.5);
+  }
+}
+
+.sidebar-brand {
+  background-color: #fff !important;
+}
+
+.sidebar {
+  // --cui-sidebar-bg: #fff !important;
+  // --cui-sidebar-nav-title-color: #000 !important;
+  // --cui-sidebar-nav-link-color: #55585c !important;
+
+  // --sidebar-nav-link-active-color: #fff;
+  // --sidebar-nav-link-active-bg: #1877f5 !important;
+  // --sidebar-nav-link-active-icon-color: #fff;
+  // --sidebar-nav-link-icon-color: #373a3d !important;
+  // --sidebar-toggler-hover-bg: #1877f5 !important;
+  // --sidebar-nav-link-hover-bg: #1877f5 !important;
+  // --cui-sidebar-nav-link-active-bg: #1877f5 !important;
+  // --cui-sidebar-nav-link-hover-bg: #1877f5 !important;
+}
+
+// .sidebar-toggler {
+//   background: #fff !important;
+// }
+
+// .sidebar {
+//   // scss-docs-start sidebar-css-vars
+//   --sidebar-color: #{$sidebar-color};
+//   --sidebar-border-width: #{$sidebar-border-width};
+//   --sidebar-border-color: #{$sidebar-border-color};
+//   --sidebar-brand-color: #{$sidebar-brand-color};
+//   --sidebar-brand-height: #{$sidebar-brand-height};
+//   --sidebar-brand-bg: #{$sidebar-brand-bg};
+//   --sidebar-header-height: #{$sidebar-header-height};
+//   --sidebar-header-bg: #{$sidebar-header-bg};
+//   --sidebar-header-padding-x: #{$sidebar-header-padding-x};
+//   --sidebar-header-padding-y: #{$sidebar-header-padding-y};
+//   --sidebar-footer-bg: #{$sidebar-footer-bg};
+//   --sidebar-footer-height: #{$sidebar-footer-height};
+//   --sidebar-footer-padding-x: #{$sidebar-footer-padding-x};
+//   --sidebar-footer-padding-y: #{$sidebar-footer-padding-y};
+//   --sidebar-toggler-bg: #{$sidebar-toggler-bg};
+//   --sidebar-toggler-height: #{$sidebar-toggler-height};
+//   --sidebar-toggler-indicator: #{escape-svg($sidebar-toggler-indicator-icon)};
+//   --sidebar-toggler-indicator-width: #{$sidebar-toggler-indicator-width};
+//   --sidebar-toggler-indicator-height: #{$sidebar-toggler-indicator-height};
+//   --sidebar-toggler-hover-bg: #{$sidebar-toggler-hover-bg};
+//   --sidebar-toggler-indicator-hover: #{escape-svg($sidebar-toggler-indicator-hover-icon)};
+
+//   --sidebar-narrow-width: #{$sidebar-narrow-width};
+
+//   --sidebar-nav-title-padding-x: #{$sidebar-nav-title-padding-x};
+//   --sidebar-nav-title-padding-y: #{$sidebar-nav-title-padding-y};
+//   --sidebar-nav-title-margin-top: #{$sidebar-nav-title-margin-top};
+//   --sidebar-nav-title-color: #{$sidebar-nav-title-color};
+//   --sidebar-nav-link-padding-x: #{$sidebar-nav-link-padding-x};
+//   --sidebar-nav-link-padding-y: #{$sidebar-nav-link-padding-y};
+//   --sidebar-nav-link-color: #{$sidebar-nav-link-color};
+//   --sidebar-nav-link-bg: #{$sidebar-nav-link-bg};
+//   --sidebar-nav-link-border-color: #{$sidebar-nav-link-border-color};
+//   --sidebar-nav-link-border: #{$sidebar-nav-link-border-width} solid var(--sidebar-nav-link-border-color);
+//   --sidebar-nav-link-border-radius: #{$sidebar-nav-link-border-radius};
+//   --sidebar-nav-link-active-color: #{$sidebar-nav-link-active-color};
+//   --sidebar-nav-link-active-bg: #{$sidebar-nav-link-active-bg};
+//   --sidebar-nav-link-active-icon-color: #{$sidebar-nav-link-active-icon-color};
+//   --sidebar-nav-link-disabled-color: #{$sidebar-nav-link-disabled-color};
+//   --sidebar-nav-link-disabled-icon-color: #{$sidebar-nav-link-disabled-icon-color};
+//   --sidebar-nav-link-hover-color: #{$sidebar-nav-link-hover-color};
+//   --sidebar-nav-link-hover-bg: #{$sidebar-nav-link-hover-bg};
+//   --sidebar-nav-link-hover-icon-color: #{$sidebar-nav-link-hover-icon-color};
+//   --sidebar-nav-icon-width: #{$sidebar-nav-icon-width};
+//   --sidebar-nav-icon-height: #{$sidebar-nav-icon-height};
+//   --sidebar-nav-icon-font-size: #{$sidebar-nav-icon-font-size};
+//   --sidebar-nav-link-icon-color: #{$sidebar-nav-link-icon-color};
+//   --sidebar-nav-group-bg: #{$sidebar-nav-group-bg};
+//   --sidebar-nav-group-items-padding-y: #{$sidebar-nav-group-items-padding-y};
+//   --sidebar-nav-group-items-padding-x: #{$sidebar-nav-group-items-padding-x};
+//   --sidebar-nav-group-indicator: #{escape-svg($sidebar-nav-group-indicator-icon)};
+//   --sidebar-nav-group-indicator-hover: #{escape-svg($sidebar-nav-group-indicator-hover-icon)};
+//   --sidebar-nav-group-toggle-show-color: #{$sidebar-nav-group-toggle-show-color};
+//   // scss-docs-end sidebar-css-vars
+// }

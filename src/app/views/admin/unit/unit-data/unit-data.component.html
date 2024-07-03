@@ -1,0 +1,280 @@
+<!-- unit.component.html -->
+<c-row>
+  <c-col xs="12">
+    <c-card class="mb-3">
+      <c-card-header>
+        <strong>Units</strong>
+      </c-card-header>
+      <c-card-body>
+        <c-nav variant="tabs">
+          <c-nav-item *ngFor="let nav of panes; index as i; first as isFirst; last as isLast">
+            <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="i" (click)="onTabChange(i)" cNavLink>
+              {{nav.name}}
+            </a>
+          </c-nav-item>
+        </c-nav>
+        
+        <c-tab-content #tabContent="cTabContent" [activeTabPaneIdx]="activeTabPaneIdx" cRounded="bottom">
+          <c-tab-pane *ngFor="let pane of panes; index as i;" class="p-3">
+            
+            <div [ngSwitch]="pane.id">
+              <div *ngSwitchCase="'tab-no-group'">
+                <c-card-body>
+                  <c-row class="justify-content-end">
+                        <c-col md="4">
+                            <input
+                              type="text"
+                              [(ngModel)]="searchTerm"
+                              (keyup)="onSearch()"
+                              cFormControl
+                              placeholder="Search"
+                            />
+                        </c-col>
+                  </c-row>
+                </c-card-body>
+                <!-- Tampilkan tabel unit tanpa grup di sini -->
+                <table [striped]="true" class="text-center" cTable>
+                  <thead>
+                  <tr>
+                    <th>
+                      <c-form-check>
+                        <input cFormCheckInput type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll()" />
+                      </c-form-check>
+                    </th>
+                    <th scope="col">No.</th>
+                    <th scope="col">Nama Unit</th>
+                    <th scope="col">Group Unit</th>
+                    <th scope="col"> </th>
+                    
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let unit of unitList; let i = index">
+                    <td>
+                      <c-form-check>
+                        <input cFormCheckInput type="checkbox" [id]="'check' + unit.idUnit" [(ngModel)]="unit.selected" />
+                      </c-form-check>
+                    </td>
+                    <td>{{i + 1}}</td>
+                    <td>{{unit.namaUnit}}</td>
+                    <td>
+                      <select 
+                        [(ngModel)]="unit.unitGroup" 
+                        aria-label="Unit Group" 
+                        cSelect
+                    >
+                      <option value=null disabled selected>Assign Unit Group</option>
+                      <option 
+                        *ngFor="let group of unitGroupList" 
+                        [ngValue]="group">{{group}}
+                      </option>
+                    </select>
+                    </td>
+                    <td>
+                      <button cButton color="success" class="me-2" (click)="assignGroup(unit)">
+                        <c-icon name="cil-check" class="text-white"></c-icon>
+                      </button>
+                      <button cButton color="danger" (click)="deleteUnitSatuan(unit)" >
+                        <c-icon name="cil-trash" class="text-white"></c-icon>
+                      </button>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div *ngSwitchCase="'tab-with-group'">
+                <!-- Tampilkan tabel unit dengan grup di sini -->
+                <c-card-body>
+                  <c-row>
+                      <c-col>
+                          <select 
+                              [(ngModel)]="selectedUnitGroup" 
+                              aria-label="Unit Group" 
+                              cSelect
+                          >
+                            <option value="" disabled selected>Group Unit</option>
+                            <option 
+                              *ngFor="let group of unitGroupList" 
+                              [ngValue]="group">{{group}}
+                            </option>
+                          </select>
+                        </c-col>
+                        <c-col>
+                          <button cButton color="info" (click)="loadUnit()">Show</button>
+                        </c-col>
+                        <c-col>
+                          <input type="text" [(ngModel)]="searchTerm" (keyup)="onSearch()" cFormControl placeholder="Search">
+                        </c-col>
+                  </c-row>
+                </c-card-body>
+      
+              <c-card-body>
+                    <table [striped]="true" class="text-center" cTable>
+                      <thead>
+                      <tr>
+                        <th>
+                          <c-form-check>
+                            <input cFormCheckInput type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll()" />
+                          </c-form-check>
+                        </th>
+                        <th scope="col">No.</th>
+                        <th scope="col">Nama Unit</th>
+                        <th scope="col">Group Unit</th>
+                        <th scope="col"> </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let unit of unitList; let i = index">
+                        <td>
+                          <c-form-check>
+                            <input cFormCheckInput type="checkbox" [id]="'check' + unit.idUnit" [(ngModel)]="unit.selected" />
+                          </c-form-check>
+                        </td>
+                        <td>{{i + 1}}</td>
+                        <td>{{unit.namaUnit}}</td>
+                        <td>{{unit.unitGroup}}</td>
+                        <td>
+                          <button cButton color="info" class="me-2" (click)="editUnit(unit)">
+                            <c-icon name="cil-pencil" class="text-white"></c-icon>
+                          </button>
+                          <button cButton color="danger" (click)="deleteUnitSatuan(unit)">
+                            <c-icon name="cil-trash" class="text-white"></c-icon>
+                          </button>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>      
+                </c-card-body> 
+
+                <c-modal [(visible)]="showEditModal">
+                  <c-modal-header>
+                    <strong>Edit Unit</strong>
+                  </c-modal-header>
+                  <c-modal-body>
+                    <c-row class="mb-3">
+                      <label cLabel class="col-sm-2 col-form-label" for="namaUnit">
+                        Nama Unit
+                      </label>
+                      <div class="col-sm-10">
+                        <input 
+                          cFormControl id="namaUnit" 
+                          type="text" 
+                          [(ngModel)]="selectedUnit.namaUnit" 
+                          (ngModelChange)="onEditFormChange()"
+                          name="namaUnit" 
+                          required
+                        />
+                      </div>
+                    </c-row>
+                    <c-row class="mb-3">
+                      <label cLabel class="col-sm-2 col-form-label" for="unitGroup">
+                        Group Unit
+                      </label>
+                      <div class="col-sm-10">
+                        <select 
+                          [(ngModel)]="unitGroup"
+                          (ngModelChange)="onEditFormChange()"
+                          aria-label="Unit Group"
+                          cSelect
+                        >
+                          <option 
+                            *ngFor="let group of unitGroupList" 
+                            [ngValue]="group"
+                          >
+                            {{group}}
+                          </option>
+                        </select>
+                      </div>
+                    </c-row>
+                  </c-modal-body>
+                  <c-modal-footer>
+                    <button cButton color="primary" (click)="onSubmitEdit()" class="me-3" style="width: 150px;">Save</button>
+                    <button cButton color="danger" (click)="cancelEdit()" style="width: 150px;">Cancel</button>
+                  </c-modal-footer>
+                </c-modal>
+          
+                <c-modal [(visible)]="showAddModal">
+                  <c-modal-header>
+                    <h5 class="modal-title">Add Unit</h5>
+                  </c-modal-header>
+                  <c-modal-body>
+                    <c-row class="mb-3">
+                      <label cLabel class="col-sm-2 col-form-label" for="namaUnitAdd">
+                        Nama Unit
+                      </label>
+                      <div class="col-sm-10">
+                        <input 
+                          cFormControl id="namaUnitAdd" 
+                          type="text" 
+                          [(ngModel)]="newUnit.namaUnit" 
+                          (ngModelChange)="onAddFormChange()"
+                          name="namaUnitAdd" 
+                          required
+                        />
+                      </div>
+                    </c-row>                    
+                    <c-row class="mb-3">
+                      <label cLabel class="col-sm-2 col-form-label" for="unitGroupAdd">
+                        Unit Group
+                      </label>
+                      <div class="col-sm-10">
+                        <select 
+                          [(ngModel)]="newUnit.unitGroup"
+                          (ngModelChange)="onAddFormChange()"
+                          aria-label="Unit Group"
+                          cSelect
+                        >
+                          <option 
+                            *ngFor="let group of unitGroupList" 
+                            [ngValue]="group"
+                          >
+                            {{group}}
+                          </option>
+                        </select>
+                      </div>
+                    </c-row>
+                  </c-modal-body>
+                  <c-modal-footer>
+                    <button cButton color="primary" (click)="onSubmitAdd()">Save</button>
+                    <button cButton color="danger" (click)="cancelAddUnit()">Cancel</button>
+                  </c-modal-footer>
+                </c-modal>
+          
+              </div>
+              <div *ngSwitchDefault>
+                <!-- Tampilkan pesan atau konten default jika tidak ada yang cocok -->
+                <p>No matching content found for this tab.</p>
+              </div>
+            </div>
+            <c-pagination align="center" aria-label="Page Navigation">
+              <c-page-item *ngIf="totalPages > 1" [disabled]="currentPage === 1" aria-label="Previous">
+                <a cPageLink (click)="onPageChange(currentPage - 1)"><span aria-hidden="true">&laquo;</span></a>
+              </c-page-item>
+              
+              <c-page-item *ngFor="let page of visiblePages" [active]="page === currentPage">
+                <a cPageLink (click)="onPageChange(page)">{{ page }}</a>
+              </c-page-item>
+              
+              <c-page-item *ngIf="totalPages > 1" [disabled]="currentPage === totalPages" aria-label="Next">
+                <a cPageLink (click)="onPageChange(currentPage + 1)"><span aria-hidden="true">&raquo;</span></a>
+              </c-page-item>
+            </c-pagination>
+          
+            <c-card-body> 
+              <div [ngSwitch]="pane.id">
+                <div *ngSwitchCase="'tab-no-group'">
+                  <button cButton color="danger" (click)="deleteSelectedUnit()" class="me-3" style="width: 150px;">Delete Selected</button>
+                  <button cButton color="success" style="width: 150px;" (click)="bulkAssignGroup()">Save Selected</button>
+                </div> 
+                <div *ngSwitchCase="'tab-with-group'">
+                  <button cButton color="danger" (click)="deleteSelectedUnit()" class="me-3" style="width: 150px;">Delete Selected</button>
+                  <button cButton color="primary" style="width: 150px;" (click)="addUnit()">Add Unit</button>
+                </div>
+              </div>  
+            </c-card-body>
+          </c-tab-pane>
+        </c-tab-content>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

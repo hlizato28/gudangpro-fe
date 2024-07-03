@@ -1,0 +1,16 @@
+.custom-hover-effect {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+  
+    &:hover {
+      background-color: #007bff;
+      color: white;
+      border-color: #007bff;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  
+      .c-icon {
+        color: white; /* Mengubah warna ikon menjadi putih saat hover */
+      }
+    }
+  }

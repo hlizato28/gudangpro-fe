@@ -1,0 +1,215 @@
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+        <c-card class="mb-4">
+          <c-card-header>
+            <strong>Pengajuan</strong>
+          </c-card-header>
+          <c-card-body class="mb-3"> 
+            <c-row class="mb-4">
+                <label cLabel class="col-sm-2 col-form-label" for="pemohon">
+                  Nama
+                </label>
+                <div class="col-sm-10">
+                  <input 
+                    cFormControl id="pemohon" 
+                    type="text" 
+                    [(ngModel)]="currentUser.nama" 
+                    name="pemohon"
+                    disabled
+                    readonly
+                  />
+                </div>
+              </c-row>
+              <c-row class="mb-4">
+                <label cLabel class="col-sm-2 col-form-label" for="cabang">
+                  Cabang
+                </label>
+                <div class="col-sm-10">
+                  <input 
+                    cFormControl id="cabang" 
+                    type="text" 
+                    [(ngModel)]="currentUser.cabang" 
+                    name="cabang"
+                    disabled
+                    readonly
+                  />
+                </div>
+              </c-row>
+              <c-row class="mb-4">
+                <label cLabel class="col-sm-2 col-form-label" for="unit">
+                  Unit
+                </label>
+                <div class="col-sm-10">
+                  <input 
+                    cFormControl id="unit" 
+                    type="text" 
+                    [(ngModel)]="currentUser.unit" 
+                    name="unit"
+                    disabled
+                    readonly
+                  />
+                </div>
+                </c-row>
+
+                <!-- Daftar Item Pengajuan -->
+                <c-row *ngFor="let detail of pengajuan.details; let i = index" class="mb-3">
+                  <c-col xs="12">
+                    <c-card class="w-75">
+                      <c-card-body>
+                        <h5 class="card-title">{{ detail.namaBarang }}</h5>
+                        <h4>Qty: {{ detail.jumlahDiminta }} {{ detail.satuan }}</h4>
+                        <p class="card-text">Kode Barang: {{ detail.kodeBarang }}</p>
+                        <p class="card-text">Stok di Gudang: {{ detail.stok }}</p>
+                        <div class="d-flex justify-content-end">
+                          <button cButton color="primary" class="me-2" (click)="editItem(i)">Edit</button>
+                          <button cButton color="danger" (click)="deleteItem(i)">Delete</button>
+                        </div>
+                      </c-card-body>
+                    </c-card>
+                  </c-col>
+                </c-row>
+
+                    <!-- Tombol Tambah Item -->
+                <c-row class="mb-4">
+                  <c-col xs="12">
+                    <button cButton color="info" (click)="addPengajuan()">
+                      <svg cIcon name="cilPlus" size="lg" class="me-2"></svg>Tambah Item
+                    </button>
+                  </c-col>
+                </c-row>
+
+        
+            </c-card-body>
+
+            <c-card-body>            
+              <!-- Tombol Submit Pengajuan -->
+              <c-row class="mb-4">
+                <c-col xs="12" class="text-center">
+                  <button cButton color="success" size="lg" (click)="submitPengajuan()" [disabled]="pengajuan.details.length === 0">
+                    Submit Pengajuan
+                  </button>
+                </c-col>
+              </c-row>
+            </c-card-body>
+        </c-card>
+    </c-col>
+
+
+
+
+      <!-- Modal Tambah/Edit Item -->
+      <c-modal [(visible)]="showAddModal">
+        <c-modal-header>
+          <h5 class="modal-title">{{ detailPengajuan.idDetailPengajuanGudangCabang ? 'Edit' : 'Add' }} Item Pengajuan</h5>
+        </c-modal-header>
+        <c-modal-body>
+          <c-row class="mb-3" *ngIf="showSelectKategori">
+            <label cLabel class="col-sm-2 col-form-label" for="kategoriBarang">
+              Kategori Barang
+            </label>
+            <div class="col-sm-10">
+              <select 
+                [(ngModel)]="selectedKategori"
+                (ngModelChange)="onKategoriChange()"
+                aria-label="Kategori Barang"
+                cSelect
+              >
+                <option value="" disabled selected>Pilih Kategori</option>
+                <option 
+                  *ngFor="let kategori of kategoriList" 
+                  [ngValue]="kategori"
+                >
+                  {{kategori}}
+                </option>
+              </select>
+            </div>
+          </c-row>
+          <c-row class="mb-3" *ngIf="selectedKategori">
+            <label cLabel class="col-sm-2 col-form-label" for="namaBarang">
+              Nama Barang
+            </label>
+            <div class="col-sm-10">
+              <select 
+                [(ngModel)]="detailPengajuan.namaBarang"
+                (ngModelChange)="loadByNamaBarang()"
+                aria-label="Nama Barang"
+                cSelect
+              >
+                <option value="" disabled selected>Pilih Nama Barang</option>
+                <option 
+                  *ngFor="let barang of barangGudangList" 
+                  [ngValue]="barang"
+                >
+                  {{barang}}
+                </option>
+              </select>
+            </div>
+          </c-row>
+          <c-row class="mb-3" *ngIf="detailPengajuan.namaBarang">
+            <label cLabel class="col-sm-2 col-form-label" for="kodeBarang">
+              Kode Barang
+            </label>
+            <div class="col-sm-10">
+              <input 
+                cFormControl id="kodeBarang" 
+                type="text" 
+                [(ngModel)]="detailPengajuan.kodeBarang" 
+                name="kodeBarang"
+                disabled
+                readonly
+              />
+            </div>
+          </c-row>
+          <c-row class="mb-3" *ngIf="detailPengajuan.namaBarang">
+            <label cLabel class="col-sm-2 col-form-label" for="jumlahDiminta">
+              Jumlah Diminta
+            </label>
+            <div class="col-sm-10">
+              <input 
+                cFormControl id="jumlahDiminta" 
+                type="number" 
+                [(ngModel)]="detailPengajuan.jumlahDiminta" 
+                name="jumlahDiminta"
+              />
+            </div>
+          </c-row>
+          <c-row class="mb-3" *ngIf="detailPengajuan.namaBarang">
+            <label cLabel class="col-sm-2 col-form-label" for="satuan">
+              Satuan
+            </label>
+            <div class="col-sm-10">
+              <input 
+                cFormControl id="satuan" 
+                type="text" 
+                [(ngModel)]="detailPengajuan.satuan" 
+                name="satuan"
+                disabled
+                readonly
+              />
+            </div>
+          </c-row>
+          <c-row class="mb-3" *ngIf="detailPengajuan.namaBarang">
+            <label cLabel class="col-sm-2 col-form-label" for="stok">
+              Stok
+            </label>
+            <div class="col-sm-10">
+              <input 
+                cFormControl id="stok" 
+                type="number" 
+                [(ngModel)]="detailPengajuan.stok" 
+                name="stok"
+                disabled
+                readonly
+              />
+            </div>
+          </c-row>
+        </c-modal-body>
+        <c-modal-footer>
+          <button cButton color="primary" (click)="onSubmitAdd()">Save</button>
+          <button cButton color="secondary" (click)="cancelAddItem()">Cancel</button>
+        </c-modal-footer>
+      </c-modal>  
+      
+</c-row>
+
+ 

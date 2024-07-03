@@ -1,0 +1,121 @@
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Balancing Item</strong>
+        </c-card-header>
+        <c-card-body>
+          <c-row class="mb-3">
+            <c-col md="3">
+              <label cLabel>Tanggal:</label>
+              <input cFormControl type="date" [(ngModel)]="selectedDate" (change)="onDateChange()">
+            </c-col>
+            <c-col md="3">
+              <label cLabel>Kategori:</label>
+              <select cSelect [(ngModel)]="selectedKategori" (change)="onKategoriChange()">
+                <option value="">Pilih Kategori</option>
+                <option *ngFor="let kategori of kategoriList" [value]="kategori">{{kategori}}</option>
+              </select>
+            </c-col>
+            <c-col md="3" class="d-flex align-items-end">
+              <button cButton color="primary" (click)="loadBalancing()">Show</button>
+            </c-col>
+          </c-row>
+  
+          <ng-container *ngIf="isDataLoaded">
+            <ng-container *ngIf="balancingList.length; else noData">
+              <c-row *ngFor="let item of balancingList" class="mb-3">
+                <c-col>
+                  <c-card class="balancing-card" [ngClass]="{'approved-card': item.isApproved}">
+                    <c-card-body>
+                      <c-row class="mb-2">
+                        <c-col md="4">
+                          <label cLabel>Kode Barang:</label>
+                          <input cFormControl [value]="item.kodeBarang" disabled>
+                        </c-col>
+                        <c-col md="4">
+                          <label cLabel>Nama Barang:</label>
+                          <input cFormControl [value]="item.namaBarang" disabled>
+                        </c-col>
+                        <c-col md="4">
+                          <label cLabel>Satuan:</label>
+                          <input cFormControl [value]="item.satuan" disabled>
+                        </c-col>
+                      </c-row>
+                      <c-row>
+                        <c-col md="3">
+                          <label cLabel>Stok Awal:</label>
+                          <input cFormControl type="number" [value]="item.stokAwal" disabled>
+                        </c-col>
+                        <c-col md="3">
+                          <label cLabel>Barang In:</label>
+                          <input cFormControl type="number" [value]="item.barangIn" disabled>
+                        </c-col>
+                        <c-col md="3">
+                          <label cLabel>Barang Out:</label>
+                          <input cFormControl type="number" [value]="item.barangOut" disabled>
+                        </c-col>
+                        <c-col md="3">
+                          <label cLabel>Stok Akhir:</label>
+                          <input cFormControl type="number" [value]="item.stokAkhir" disabled>
+                        </c-col>
+                      </c-row>
+                      <c-row class="mt-3">
+                        <c-col class="d-flex justify-content-end">
+                          <button cButton color="danger" variant="outline" class="me-2"  [disabled]="item.isApproved">
+                            <c-icon name="cil-trash"></c-icon> Revisi
+                          </button>
+                          <ng-container *ngIf="item.isApproved; else approveButton">
+                            <button class="btn btn-danger cancel-button" (click)="onApprove(item)">
+                              <c-icon name="cil-trash"></c-icon> Cancel
+                            </button>
+                          </ng-container>
+                          <ng-template #approveButton>
+                            <button cButton color="success" (click)="onApprove(item)">
+                              <c-icon name="cil-check"></c-icon> Sesuai
+                            </button>
+                          </ng-template>
+                        </c-col>
+                      </c-row>
+                    </c-card-body>
+                  </c-card>
+                </c-col>
+              </c-row>
+  
+              <c-row class="mt-3">
+                <c-col class="d-flex justify-content-center">
+                  <button cButton color="primary" (click)="onSubmitBalancing()" [disabled]="!allItemsApproved()">
+                    Submit Balancing
+                  </button>
+                </c-col>
+              </c-row>
+            </ng-container>
+            
+            <ng-template #noData>
+              <p class="text-center">Tidak ada data balancing.</p>
+            </ng-template>
+          </ng-container>
+        </c-card-body>
+  
+        <c-card-footer *ngIf="totalPages > 1">
+          <c-pagination align="center" aria-label="Page navigation">
+            <c-page-item [disabled]="currentPage === 1" aria-label="Previous">
+              <a cPageLink (click)="onPageChange(currentPage - 1)">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </c-page-item>
+            
+            <c-page-item *ngFor="let page of visiblePages" [active]="page === currentPage">
+              <a cPageLink (click)="onPageChange(page)">{{ page }}</a>
+            </c-page-item>
+            
+            <c-page-item [disabled]="currentPage === totalPages" aria-label="Next">
+              <a cPageLink (click)="onPageChange(currentPage + 1)">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </c-page-item>
+          </c-pagination>
+        </c-card-footer>
+      </c-card>
+    </c-col>
+  </c-row>
