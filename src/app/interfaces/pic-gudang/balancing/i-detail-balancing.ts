@@ -7,6 +7,7 @@ export interface IDetailBalancing {
     barangIn: number;
     barangOut: number;
     stokAkhir: number;
+    idBarangGudang: number;
     selected?: boolean;
     isApproved?: boolean;
 }

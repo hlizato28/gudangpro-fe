@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import {
   AccordionModule,
@@ -37,6 +37,9 @@ import { ApprovePengajuanComponent } from './approve-pengajuan/approve-pengajuan
 import { ApproveDetailPengajuanComponent } from './approve-detail-pengajuan/approve-detail-pengajuan.component';
 import { RouterModule } from '@angular/router';
 import { BalancingComponent } from './balancing/balancing.component';
+import { RevisiComponent } from './revisi/revisi.component';
+import { RevisiDetailComponent } from './revisi-detail/revisi-detail.component';
+import { RevisiOutComponent } from './revisi-out/revisi-out.component';
 
 
 @NgModule({
@@ -44,7 +47,10 @@ import { BalancingComponent } from './balancing/balancing.component';
     StokItemComponent,
     ApprovePengajuanComponent,
     ApproveDetailPengajuanComponent,
-    BalancingComponent
+    BalancingComponent,
+    RevisiComponent,
+    RevisiDetailComponent,
+    RevisiOutComponent
   ],
   imports: [
     CommonModule,
@@ -61,6 +67,9 @@ import { BalancingComponent } from './balancing/balancing.component';
     AccordionModule,
     ListGroupModule,
     RouterModule
+  ],
+  providers: [
+    DatePipe
   ]
 })
 export class PicGudangModule { }

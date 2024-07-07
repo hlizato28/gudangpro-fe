@@ -7,5 +7,6 @@ export interface IDetailPengajuanGudangCabang {
     jumlahDiminta: number;
     jumlahApproved: number;
     jumlahDiterima: number;
+    idBarangGudang: number;
     selected?: boolean;
 }

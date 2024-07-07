@@ -26,7 +26,7 @@ export class BalancingService {
       .set('page', page.toString())
       .set('size', size.toString());
 
-    let url = `${this.baseUrl}/${this.apiUrl}/all`;
+    let url = `${this.baseUrl}/${this.apiUrl}/all-no-balancing`;
 
     return this.http.get<ListDataResponse<IDetailBalancing>>(url, { params }).pipe(
       // catchError(this.handleError)
@@ -54,27 +54,7 @@ export class BalancingService {
   
     return this.http.get<ListDataResponse<IReport>>(url, { params });
   }
-  
-  getAllReport(kategori: string, tanggal: string, app: boolean, rj: boolean): Observable<IReportBalancing[]> {
-    let params = new HttpParams()
-      .set('kategori', kategori)
-      .set('tanggal', tanggal);
-  
-    let url = `${this.baseUrl}/${this.apiUrl}/report/all`;
-  
-    if(!app && !rj) {
-      url += `/no-approve`;
-    } else if (app && !rj) {
-      url += `/with-approve`;
-    }
-  
-    return this.http.get<IReportBalancing[]>(url, { params }).pipe(
-      catchError((error) => {
-        console.error('Error fetching all reports:', error);
-        return of([]); 
-      })
-    );
-  }
+
   approveBalancing(reportBalancing: IReport, app: boolean): Observable<any> {
     let url = `${this.baseUrl}/${this.apiUrl}/to`;
 
@@ -86,5 +66,26 @@ export class BalancingService {
     
     return this.http.put(url, reportBalancing);
   }
+
+  getRevisi(page: number, size: number): Observable<ListDataResponse<IBalancing>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+  
+    let url = `${this.baseUrl}/${this.apiUrl}/all-revisi`;
+  
+    return this.http.get<ListDataResponse<IBalancing>>(url, { params });
+  }
+
+  getRevisiDetail(id: number, page: number, size: number): Observable<ListDataResponse<IDetailBalancing>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+  
+    let url = `${this.baseUrl}/${this.apiUrl}/all-by-bid/${id}`;
+  
+    return this.http.get<ListDataResponse<IDetailBalancing>>(url, { params });
+  }
+
 
 }

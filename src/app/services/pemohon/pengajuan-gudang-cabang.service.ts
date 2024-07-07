@@ -3,9 +3,9 @@ import { environment } from '../../../environments/environment.development';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IDetailPengajuanGudangCabang } from '../../interfaces/pemohon/i-detail-pengajuan-gudang-cabang';
-import { GenericDataResponse } from 'src/app/interfaces/responses/generic-data-response';
 import { IPengajuanGudangCabang } from 'src/app/interfaces/pemohon/i-pengajuan-gudang-cabang';
 import { ListDataResponse } from 'src/app/interfaces/responses/list-data-response';
+import { DatePipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,10 @@ export class PengajuanGudangCabangService {
   
   private apiUrl = '/api/pengajuan/cabang';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private datePipe: DatePipe
+  ) { }
 
   getDetailPengajuanByCabang(page: number, size: number): Observable<ListDataResponse<IPengajuanGudangCabang>> {
     let params = new HttpParams()
@@ -28,8 +31,14 @@ export class PengajuanGudangCabangService {
     return this.http.get<ListDataResponse<IPengajuanGudangCabang>>(url, { params });
   }
 
-  getDetailPengajuanByUser(): Observable<GenericDataResponse<IPengajuanGudangCabang[]>> {
-    return this.http.get<GenericDataResponse<IPengajuanGudangCabang[]>>(`${this.baseUrl}/${this.apiUrl}/detail-by-user`);
+  getDetailPengajuanByUser(page: number, size: number): Observable<ListDataResponse<IDetailPengajuanGudangCabang>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+  
+    let url = `${this.baseUrl}/${this.apiUrl}/detail-by-user`;
+
+    return this.http.get<ListDataResponse<IDetailPengajuanGudangCabang>>(url, { params });
   }
 
   create(pengajuanRequest: IPengajuanGudangCabang): Observable<any> {
@@ -54,6 +63,21 @@ export class PengajuanGudangCabangService {
     const url = `${this.baseUrl}/${this.apiUrl}/diterima`;
     return this.http.put(url, detailPengajuan);
   }
+
+  getRevisiOut(idDetailBalancing: number, createdAt: number, page: number = 0, size: number = 10): Observable<any> {
+    let params = new HttpParams()
+      .set('tgl', createdAt)
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get(`${this.baseUrl}/${this.apiUrl}/revisi-out/${idDetailBalancing}`, { params });
+  }
+
+  revisiDetailPengajuan(id: number, pengajuanList: IPengajuanGudangCabang[]): Observable<any> {
+    const url = `${this.baseUrl}/${this.apiUrl}/revisi-out/save/${id}`;
+    return this.http.put(url, pengajuanList);
+  }
+
 
 
 }

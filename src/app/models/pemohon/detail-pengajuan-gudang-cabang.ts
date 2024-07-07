@@ -9,4 +9,5 @@ export class DetailPengajuanGudangCabang implements IDetailPengajuanGudangCabang
     jumlahApproved: number = 0;
     jumlahDiminta: number = 0;
     jumlahDiterima: number = 0;
+    idBarangGudang: number = 0;
 }

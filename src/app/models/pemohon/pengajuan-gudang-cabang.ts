@@ -4,5 +4,6 @@ import { IPengajuanGudangCabang } from "../../interfaces/pemohon/i-pengajuan-gud
 export class PengajuanGudangCabang implements IPengajuanGudangCabang {
     idPengajuanGudangCabang?: number = 0;
     user: string = '';
+    unit?: string = '';
     details: IDetailPengajuanGudangCabang[] = [];
 }

@@ -5,8 +5,8 @@
           <strong>Approval Terima Barang</strong>
         </c-card-header>
         <c-card-body>
-          <ng-container *ngIf="pagedDetails.length; else noData">
-            <c-row *ngFor="let detail of pagedDetails" class="mb-3">
+          <ng-container *ngIf="details.length; else noData">
+            <c-row *ngFor="let detail of details" class="mb-3">
               <c-col>
                 <c-card>
                   <c-card-body>

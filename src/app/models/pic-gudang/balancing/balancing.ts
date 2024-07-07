@@ -5,4 +5,5 @@ export class Balancing implements IBalancing{
     idBalancing?: number = 0;
     createdAt: Date | null = null;
     details: IDetailBalancing[] = [];
+    kategori: string = '';
 }

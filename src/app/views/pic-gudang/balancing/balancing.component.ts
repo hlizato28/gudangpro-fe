@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import { IBalancing } from 'src/app/interfaces/pic-gudang/balancing/i-balancing'
 
 function removeUnnecessaryProperties(obj: any): any {
-  const { isApproved, selected, ...rest } = obj;
+  const { isApproved, selected, kategori, ...rest } = obj;
   return rest;
 }
 
@@ -53,6 +53,17 @@ export class BalancingComponent implements OnInit{
   loadBalancing(): void {
     if (!this.selectedDate || !this.selectedKategori) {
       Swal.fire('Error', 'Pilih tanggal dan kategori terlebih dahulu', 'error');
+      return;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset waktu ke 00:00:00
+
+    const selectedDate = new Date(this.selectedDate);
+    selectedDate.setHours(0, 0, 0, 0); // Reset waktu ke 00:00:00
+
+    if (selectedDate > today) {
+      Swal.fire('Error', 'Tanggal tidak bisa melebihi tanggal hari ini', 'error');
       return;
     }
     

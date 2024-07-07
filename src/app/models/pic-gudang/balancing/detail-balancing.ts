@@ -9,4 +9,5 @@ export class DetailBalancing implements IDetailBalancing {
     barangIn: number = 0;
     barangOut: number = 0;
     stokAkhir: number = 0;
+    idBarangGudang: number = 0;
 }

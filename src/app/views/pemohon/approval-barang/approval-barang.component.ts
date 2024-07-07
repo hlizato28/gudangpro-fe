@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IDetailPengajuanGudangCabang } from 'src/app/interfaces/pemohon/i-detail-pengajuan-gudang-cabang';
 import { IPengajuanGudangCabang } from 'src/app/interfaces/pemohon/i-pengajuan-gudang-cabang';
+import { ListDataResponse } from 'src/app/interfaces/responses/list-data-response';
 import { PengajuanGudangCabangService } from 'src/app/services/pemohon/pengajuan-gudang-cabang.service';
 import Swal from 'sweetalert2';
 
@@ -10,10 +11,8 @@ import Swal from 'sweetalert2';
   styleUrls: ['./approval-barang.component.scss']
 })
 export class ApprovalBarangComponent implements OnInit{
-  pengajuan: IPengajuanGudangCabang[] = [];
   details: IDetailPengajuanGudangCabang[] = [];
 
-  // Properti paginasi
   currentPage: number = 1;
   pageSize: number = 5;
   totalItems: number = 0;
@@ -29,21 +28,21 @@ export class ApprovalBarangComponent implements OnInit{
   }
 
   loadDetailPengajuan(): void {
-    this.pengajuanService.getDetailPengajuanByUser().subscribe({
-      next: (response) => {
-        if (response.success && Array.isArray(response.data)) {
-          this.pengajuan = response.data;
-          this.details = this.pengajuan.flatMap(p => p.details);
-          this.updatePagination();
+    this.pengajuanService.getDetailPengajuanByUser(this.currentPage - 1, this.pageSize).subscribe({
+      next: (response: ListDataResponse<IDetailPengajuanGudangCabang>) => {
+        if (Array.isArray(response.content)) {
+          this.details = response.content;
         } else {
-          console.error('Invalid response format');
-          this.pengajuan = [];
+          console.error('Invalid response format: content is not an array');
           this.details = [];
         }
+        this.totalItems = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.currentPage = response.number + 1;
+        this.updateVisiblePages();
       },
       error: (error) => {
         console.error('Error loading detail:', error);
-        this.pengajuan = [];
         this.details = [];
       }
     });
@@ -91,11 +90,10 @@ export class ApprovalBarangComponent implements OnInit{
     }
   }
 
-  // Metode paginasi
-  updatePagination(): void {
-    this.totalItems = this.details.length;
-    this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+  onPageChange(page: number): void {
+    this.currentPage = page;
     this.updateVisiblePages();
+    this.loadDetailPengajuan();
   }
 
   updateVisiblePages(): void {
@@ -116,20 +114,7 @@ export class ApprovalBarangComponent implements OnInit{
       }
     }
 
-    this.visiblePages = Array.from(
-      { length: endPage - startPage + 1 },
-      (_, i) => startPage + i
-    );
-  }
-
-  onPageChange(page: number): void {
-    this.currentPage = page;
-    this.updateVisiblePages();
-  }
-
-  get pagedDetails(): IDetailPengajuanGudangCabang[] {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    return this.details.slice(startIndex, startIndex + this.pageSize);
+    this.visiblePages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
   }
 
 }

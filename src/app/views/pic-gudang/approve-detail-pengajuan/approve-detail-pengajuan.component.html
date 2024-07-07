@@ -56,8 +56,8 @@
           </ng-template>
         </c-card-body>
   
-        <c-card-footer *ngIf="totalPages > 1">
-          <c-col>
+        <c-card-footer>
+          <c-col *ngIf="totalPages > 1">
             <c-pagination align="center" aria-label="Page navigation">
               <c-page-item [disabled]="currentPage === 1" aria-label="Previous">
                 <a cPageLink (click)="onPageChange(currentPage - 1); $event.preventDefault()">

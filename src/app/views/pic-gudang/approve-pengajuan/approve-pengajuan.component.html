@@ -10,10 +10,24 @@
                 <c-col>
                   <c-card>
                     <c-card-body class="d-flex justify-content-between align-items-center custom-hover-effect" variant="ghost" (click)="goToDetail(pengajuan.idPengajuanGudangCabang); $event.preventDefault()">
-                      <div>
-                        <c-icon name="cil-user" class="me-2"></c-icon>
-                        {{ pengajuan.user }}
-                      </div>
+                      <c-col [xs]="12" [sm]="6">
+                        <div class="d-flex align-items-center mb-3">
+                          <c-icon name="cil-user" size="lg" class="me-2"></c-icon>
+                          <div>
+                            <div class="text-medium-emphasis small">Pemohon</div>
+                            <div class="fw-bold">{{ pengajuan.user }}</div>
+                          </div>
+                        </div>
+                      </c-col>
+                      <c-col [xs]="12" [sm]="6">
+                        <div class="d-flex align-items-center mb-3">
+                          <c-icon name="cil-calendar" size="lg" class="me-2"></c-icon>
+                          <div>
+                            <div class="text-medium-emphasis small">Unit</div>
+                            <div class="fw-bold">{{ pengajuan.unit }}</div>
+                          </div>
+                        </div>
+                      </c-col>
                     </c-card-body>
                   </c-card>
                 </c-col>

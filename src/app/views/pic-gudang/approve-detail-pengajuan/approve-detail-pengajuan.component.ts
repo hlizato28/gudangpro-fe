@@ -131,7 +131,12 @@ export class ApproveDetailPengajuanComponent implements OnInit {
             text: app ? 'Pengajuan telah disetujui.' : 'Pengajuan tidak disetujui.',
             icon: 'success',
           }).then(() => {
-            this.loadDetailPengajuan(this.id!);
+            if(this.allDetails.length > 1) {
+              this.loadDetailPengajuan(this.id!);
+            } else {
+              this.pagedDetails = [];
+            }
+            
           });
         },
         error: (error) => {

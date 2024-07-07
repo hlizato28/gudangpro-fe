@@ -1,4 +1,3 @@
-import { IBarang } from '../gs/i-barang';
 
 export interface ListDataResponse<T> {
     content: T[];

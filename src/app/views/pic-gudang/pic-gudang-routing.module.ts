@@ -4,6 +4,9 @@ import { StokItemComponent } from './stok-item/stok-item.component';
 import { ApprovePengajuanComponent } from './approve-pengajuan/approve-pengajuan.component';
 import { ApproveDetailPengajuanComponent } from './approve-detail-pengajuan/approve-detail-pengajuan.component';
 import { BalancingComponent } from './balancing/balancing.component';
+import { RevisiComponent } from './revisi/revisi.component';
+import { RevisiDetailComponent } from './revisi-detail/revisi-detail.component';
+import { RevisiOutComponent } from './revisi-out/revisi-out.component';
 
 const routes: Routes = [
   {
@@ -26,10 +29,44 @@ const routes: Routes = [
       },
       {
         path: 'balancing',
-        component: BalancingComponent,
         data: {
           title: 'Balancing',
-        }
+        },
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'balancing'
+          },
+          {
+            path: 'balancing',
+            component: BalancingComponent,
+            data: {
+              title: 'Balancing'
+            }
+          },
+          {
+            path: 'revisi',
+            component: RevisiComponent,
+            data: {
+              title: 'Revisi Balancing'
+            }
+          },
+          {
+            path: 'revisi-detail/:id',
+            component: RevisiDetailComponent,
+            data: {
+              title: 'Revisi Balancing'
+            }
+          },
+          {
+            path: 'revisi-out/:id',
+            component: RevisiOutComponent,
+            data: {
+              title: 'Revisi Barang Out'
+            }
+          }
+        ]
       },
       {
         path: 'approve-pengajuan',

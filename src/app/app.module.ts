@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import {
+  DatePipe,
   HashLocationStrategy,
   LocationStrategy,
 } from '@angular/common';
@@ -104,6 +105,7 @@ const APP_CONTAINERS = [
     },
     IconSetService,
     Title,
+    DatePipe
   ],
   bootstrap: [AppComponent],
 })

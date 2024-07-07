@@ -63,7 +63,10 @@
                       <c-row class="mt-3">
                         <c-col class="d-flex justify-content-end">
                           <button cButton color="danger" variant="outline" class="me-2"  [disabled]="item.isApproved">
-                            <c-icon name="cil-trash"></c-icon> Revisi
+                            <c-icon name="cil-trash"></c-icon> Revisi Item In
+                          </button>
+                          <button cButton color="danger" variant="outline" class="me-2"  [disabled]="item.isApproved">
+                            <c-icon name="cil-trash"></c-icon> Revisi Item Out
                           </button>
                           <ng-container *ngIf="item.isApproved; else approveButton">
                             <button class="btn btn-danger cancel-button" (click)="onApprove(item)">
@@ -81,7 +84,7 @@
                   </c-card>
                 </c-col>
               </c-row>
-  
+
               <c-row class="mt-3">
                 <c-col class="d-flex justify-content-center">
                   <button cButton color="primary" (click)="onSubmitBalancing()" [disabled]="!allItemsApproved()">
@@ -92,7 +95,7 @@
             </ng-container>
             
             <ng-template #noData>
-              <p class="text-center">Tidak ada data balancing.</p>
+              <p class="text-center">Tidak ada barang yang dapat di balancing.</p>
             </ng-template>
           </ng-container>
         </c-card-body>

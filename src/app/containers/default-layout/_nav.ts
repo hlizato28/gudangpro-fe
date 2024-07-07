@@ -100,7 +100,17 @@ export const navItems: INavData[] = [
   {
     name: 'Balancing',
     url: '/picg/balancing',
-    iconComponent: { name: 'cil-drop' }
+    iconComponent: { name: 'cil-drop' },
+    children: [
+      {
+        name: 'Balancing',
+        url: '/picg/balancing/balancing'
+      },
+      {
+        name: 'Revisi',
+        url: 'picg/balancing/revisi'
+      }
+    ]
   },
   {
     name: 'Pengajuan GS',
@@ -145,11 +155,6 @@ export const navItems: INavData[] = [
         url: '/boh/history/balancing'
       },
     ]
-  },
-  {
-    name: 'Revisi',
-    url: '/boh/revisi',
-    iconComponent: { name: 'cil-drop' }
   },
   {
     title: true,

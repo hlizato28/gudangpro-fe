@@ -1,0 +1,104 @@
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>Revisi Balancing</strong>
+        </c-card-header>
+        <c-card-body>
+          <ng-container *ngIf="revisiDetailList.length; else noData">
+            <c-row *ngFor="let revisi of revisiDetailList" class="mb-3">
+                <c-col>
+                    <c-card class="balancing-card" [ngClass]="{'approved-card': revisi.isApproved}">
+                      <c-card-body>
+                        <c-row class="mb-2">
+                          <c-col md="4">
+                            <label cLabel>Kode Barang:</label>
+                            <input cFormControl [value]="revisi.kodeBarang" disabled>
+                          </c-col>
+                          <c-col md="4">
+                            <label cLabel>Nama Barang:</label>
+                            <input cFormControl [value]="revisi.namaBarang" disabled>
+                          </c-col>
+                          <c-col md="4">
+                            <label cLabel>Satuan:</label>
+                            <input cFormControl [value]="revisi.satuan" disabled>
+                          </c-col>
+                        </c-row>
+                        <c-row>
+                          <c-col md="3">
+                            <label cLabel>Stok Awal:</label>
+                            <input cFormControl type="number" [value]="revisi.stokAwal" disabled>
+                          </c-col>
+                          <c-col md="3">
+                            <label cLabel>Barang In:</label>
+                            <input cFormControl type="number" [value]="revisi.barangIn" disabled>
+                          </c-col>
+                          <c-col md="3">
+                            <label cLabel>Barang Out:</label>
+                            <input cFormControl type="number" [value]="revisi.barangOut" disabled>
+                          </c-col>
+                          <c-col md="3">
+                            <label cLabel>Stok Akhir:</label>
+                            <input cFormControl type="number" [value]="revisi.stokAkhir" disabled>
+                          </c-col>
+                        </c-row>
+                        <c-row class="mt-3">
+                          <c-col class="d-flex justify-content-end">
+                            <button cButton color="danger" variant="outline" class="me-2"  [disabled]="revisi.isApproved">
+                                <c-icon name="cil-trash"></c-icon> Revisi Item In
+                              </button>
+                              <button cButton color="danger" variant="outline" class="me-2" (click)="revisi.idDetailBalancing && goToRevisiOut(revisi.idDetailBalancing)"  [disabled]="revisi.isApproved">
+                                <c-icon name="cil-trash"></c-icon> Revisi Item Out
+                              </button>
+                            <ng-container *ngIf="revisi.isApproved; else approveButton">
+                              <button class="btn btn-danger cancel-button" (click)="onApproved(revisi)">
+                                <c-icon name="cil-trash"></c-icon> Cancel
+                              </button>
+                            </ng-container>
+                            <ng-template #approveButton>
+                              <button cButton color="success" (click)="onApproved(revisi)">
+                                <c-icon name="cil-check"></c-icon> Sesuai
+                              </button>
+                            </ng-template>
+                          </c-col>
+                        </c-row>
+                      </c-card-body>
+                    </c-card>
+                  </c-col>
+            </c-row>
+          </ng-container>
+          <ng-template #noData>
+            <p class="text-center">Tidak ada data revisi.</p>
+          </ng-template>
+        </c-card-body>
+  
+        <c-card-footer>
+          <c-col *ngIf="totalPages > 1">
+            <c-pagination align="center" aria-label="Page navigation">
+              <c-page-item [disabled]="currentPage === 1" aria-label="Previous">
+                <a cPageLink (click)="onPageChange(currentPage - 1); $event.preventDefault()">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </c-page-item>
+              
+              <c-page-item *ngFor="let page of visiblePages" [active]="page === currentPage">
+                <a cPageLink (click)="onPageChange(page); $event.preventDefault()">{{ page }}</a>
+              </c-page-item>
+              
+              <c-page-item [disabled]="currentPage === totalPages" aria-label="Next">
+                <a cPageLink (click)="onPageChange(currentPage + 1); $event.preventDefault()">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </c-page-item>
+            </c-pagination>
+          </c-col>
+          <c-col>
+            <button cButton color="danger" (click)="goBack()" class="mb-3">
+              Back
+           </button>
+          </c-col>
+          
+        </c-card-footer>
+      </c-card>
+    </c-col>
+  </c-row>

@@ -1,0 +1,42 @@
+.balancing-card {
+    transition: opacity 0.3s ease;
+  
+    &.approved-card {
+      opacity: 0.5;
+  
+      // Membuat semua elemen di dalam card menjadi semi-transparan
+      > * {
+        opacity: 0.5;
+      }
+    }
+  }
+  
+  .cancel-button {
+    opacity: 1 !important;
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: #fff !important;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    position: relative;
+    z-index: 10;
+  
+    &:hover, &:focus {
+      background-color: #c82333 !important;
+      border-color: #bd2130 !important;
+    }
+  
+    .c-icon {
+      opacity: 1 !important;
+    }
+  }
+  
+  // Animasi untuk transisi approve/cancel
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  
+  .cancel-button {
+    animation: pulse 0.3s ease;
+  }
