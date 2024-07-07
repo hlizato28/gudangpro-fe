@@ -68,7 +68,7 @@ export class RevisiComponent implements OnInit{
     this.visiblePages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
   }
 
-  goToDetail(idBalancing?: number, createdAt?: Date): void {
+  goToDetail(idBalancing: number, createdAt: Date): void {
     if (idBalancing) {
       this.router.navigate(['/picg/balancing/revisi-detail', idBalancing],
         {

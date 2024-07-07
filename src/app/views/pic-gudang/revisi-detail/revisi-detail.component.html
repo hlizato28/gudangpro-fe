@@ -47,7 +47,7 @@
                             <button cButton color="danger" variant="outline" class="me-2"  [disabled]="revisi.isApproved">
                                 <c-icon name="cil-trash"></c-icon> Revisi Item In
                               </button>
-                              <button cButton color="danger" variant="outline" class="me-2" (click)="revisi.idDetailBalancing && goToRevisiOut(revisi.idDetailBalancing)"  [disabled]="revisi.isApproved">
+                              <button cButton color="danger" variant="outline" class="me-2" (click)="revisi.idBarangGudang && revisi.idDetailBalancing && goToRevisiOut(revisi.idBarangGudang, revisi.idDetailBalancing)"  [disabled]="revisi.isApproved">
                                 <c-icon name="cil-trash"></c-icon> Revisi Item Out
                               </button>
                             <ng-container *ngIf="revisi.isApproved; else approveButton">
@@ -65,6 +65,13 @@
                       </c-card-body>
                     </c-card>
                   </c-col>
+            </c-row>
+            <c-row class="mt-3">
+              <c-col class="d-flex justify-content-center">
+                <button cButton color="primary" (click)="saveRevisi()" [disabled]="!allItemsApproved()">
+                  Save
+                </button>
+              </c-col>
             </c-row>
           </ng-container>
           <ng-template #noData>

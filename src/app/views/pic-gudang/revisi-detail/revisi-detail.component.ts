@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IDetailBalancing } from 'src/app/interfaces/pic-gudang/balancing/i-detail-balancing';
 import { ListDataResponse } from 'src/app/interfaces/responses/list-data-response';
 import { BalancingService } from 'src/app/services/pic-gudang/balancing.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-revisi-detail',
@@ -99,11 +100,34 @@ export class RevisiDetailComponent implements OnInit{
     return this.revisiDetailList.length > 0 && this.revisiDetailList.every(item => item.isApproved);
   }
 
-  goToRevisiOut(idDetailBalancing: number): void {
-    this.router.navigate(['/picg/balancing/revisi-out', idDetailBalancing], {
+  saveRevisi(): void {
+    this.balancingService.revisiBalancing(this.idBalancing).subscribe({
+      next: () => {
+        Swal.fire({
+          title: 'Sukses',
+          text: 'Revisi Tersimpan',
+          icon: 'success',
+        }).then(() => {
+          this.goBack();
+        });
+      },
+      error: (error) => {
+        console.error('Error revisi barang:', error);
+        Swal.fire({
+          title: 'Error',
+          text: error.error.message,
+          icon: 'error',
+        });
+      }
+    });
+  }
+
+  goToRevisiOut(idBarangGudang: number, idDetailBalancing: number): void {
+    this.router.navigate(['/picg/balancing/revisi-out', idBarangGudang], {
       queryParams: {
         ib: this.idBalancing,
-        tg: this.createdAt
+        tg: this.createdAt,
+        idb: idDetailBalancing
       }
     }).then(() => {
       console.log('Navigation to revisi-out complete');

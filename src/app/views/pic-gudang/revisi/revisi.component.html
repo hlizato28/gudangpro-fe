@@ -9,7 +9,7 @@
               <c-row *ngFor="let revisi of revisiList; let i = index" class="mb-3">
                 <c-col>
                   <c-card>
-                    <c-card-body class="d-flex justify-content-between align-items-center custom-hover-effect" variant="ghost" (click)="goToDetail(revisi.idBalancing, revisi.createdAt); $event.preventDefault()">
+                    <c-card-body class="d-flex justify-content-between align-items-center custom-hover-effect" variant="ghost" (click)="revisi.idBalancing && revisi.createdAt && goToDetail(revisi.idBalancing, revisi.createdAt); $event.preventDefault()">
                         <c-col [xs]="12" [sm]="6">
                             <div class="d-flex align-items-center mb-3">
                               <c-icon name="cil-user" size="lg" class="me-2"></c-icon>
@@ -24,7 +24,7 @@
                               <c-icon name="cil-calendar" size="lg" class="me-2"></c-icon>
                               <div>
                                 <div class="text-medium-emphasis small">Tanggal</div>
-                                <div class="fw-bold">{{ revisi.createdAt | date:'dd MMM yyyy HH:mm' }}</div>
+                                <div class="fw-bold">{{ revisi.createdAt | date:'dd MMM yyyy' }}</div>
                               </div>
                             </div>
                           </c-col>

@@ -4,6 +4,12 @@ import { IPengajuanGudangCabang } from 'src/app/interfaces/pemohon/i-pengajuan-g
 import { ListDataResponse } from 'src/app/interfaces/responses/list-data-response';
 import { PengajuanGudangCabangService } from 'src/app/services/pemohon/pengajuan-gudang-cabang.service';
 import { IDetailPengajuanGudangCabang } from 'src/app/interfaces/pemohon/i-detail-pengajuan-gudang-cabang'
+import Swal from 'sweetalert2';
+
+function removeUnnecessaryProperties(obj: any): any {
+  const { isApproved, selected, ...rest } = obj;
+  return rest;
+}
 
 @Component({
   selector: 'app-revisi-out',
@@ -20,9 +26,11 @@ export class RevisiOutComponent implements OnInit {
   totalPages: number = 0;
   visiblePages: number[] = [];
 
+  idBarangGudang: number = 0;
   idDetailBalancing: number = 0;
   idBalancing: number = 0;
   createdAt: number = 0;
+  selectedKategori: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -32,19 +40,21 @@ export class RevisiOutComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.idDetailBalancing = +params['id'];
+      this.idBarangGudang = +params['id'];
     });
 
     this.route.queryParams.subscribe(queryParams => {
-      this.idBalancing = +queryParams['ib'];
+      this.idBalancing = queryParams['ib'] ? +queryParams['ib'] : 0;
       this.createdAt = +queryParams['tg'];
+      this.idDetailBalancing = +queryParams['idb'];
+      this.selectedKategori = queryParams['kat'] ? queryParams['kat'] : '';
     });
 
     this.loadRevisiOut();
   }
 
   loadRevisiOut(): void {
-    this.pengajuanGudangCabangService.getRevisiOut(this.idDetailBalancing, this.createdAt, this.currentPage - 1, this.pageSize).subscribe({
+    this.pengajuanGudangCabangService.getRevisiOut(this.idBarangGudang, this.createdAt, this.currentPage - 1, this.pageSize).subscribe({
       next: (response: ListDataResponse<IPengajuanGudangCabang>) => {
         this.revisiList = response.content;
         this.totalItems = response.totalElements;
@@ -96,12 +106,50 @@ export class RevisiOutComponent implements OnInit {
     return this.revisiList.length > 0 && this.revisiList.every(item => item.isApproved);
   }
 
-  goBack(): void {
-    this.router.navigate(['/picg/balancing/revisi-detail', this.idBalancing], {
-      queryParams: {
-        tg: this.createdAt
+  saveRevisi(): void {
+    const cleanedData = this.revisiList.map(removeUnnecessaryProperties);
+
+    this.pengajuanGudangCabangService.revisiDetailPengajuan(this.idDetailBalancing, cleanedData).subscribe({
+      next: () => {
+        Swal.fire({
+          title: 'Sukses',
+          text: 'Revisi Tersimpan',
+          icon: 'success',
+        }).then(() => {
+          this.goBack();
+        });
+      },
+      error: (error) => {
+        console.error('Error revisi barang:', error);
+        Swal.fire({
+          title: 'Error',
+          text: error.error.message,
+          icon: 'error',
+        });
       }
     });
+  }
+
+  goBack(): void {
+    if (this.idBalancing !== 0) {
+      this.router.navigate(['/picg/balancing/revisi-detail', this.idBalancing], {
+        queryParams: {
+          tg: this.createdAt
+        }
+      });
+    } else {
+      this.router.navigate(['/picg/balancing/balancing'], {
+        queryParams: {
+          kat: this.selectedKategori,
+          tg: this.convertToDateString(this.createdAt)
+        }
+      });
+    }
+  }
+
+  convertToDateString(timestamp: number): string {
+    const date = new Date(timestamp);
+    return date.toISOString().split('T')[0]; 
   }
 
 

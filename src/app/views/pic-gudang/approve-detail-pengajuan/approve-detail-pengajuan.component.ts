@@ -134,7 +134,7 @@ export class ApproveDetailPengajuanComponent implements OnInit {
             if(this.allDetails.length > 1) {
               this.loadDetailPengajuan(this.id!);
             } else {
-              this.pagedDetails = [];
+              this.goBack();
             }
             
           });

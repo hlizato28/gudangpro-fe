@@ -8,7 +8,7 @@
           <ng-container *ngIf="revisiList.length; else noData">
             <c-row *ngFor="let revisi of revisiList" class="mb-3">
               <c-col>
-                <c-card>
+                <c-card class="balancing-card" [ngClass]="{'approved-card': revisi.isApproved}">
                   <c-card-body>
                     <c-row class="mb-2">
                         <c-col md="3">
@@ -51,12 +51,6 @@
                         </c-row>
                         <c-row class="mt-3">
                             <c-col class="d-flex justify-content-end">
-                              <button cButton color="danger" variant="outline" class="me-2"  [disabled]="revisi.isApproved">
-                                <c-icon name="cil-trash"></c-icon> Revisi Item In
-                              </button>
-                              <button cButton color="danger" variant="outline" class="me-2"  [disabled]="revisi.isApproved">
-                                <c-icon name="cil-trash"></c-icon> Revisi Item Out
-                              </button>
                               <ng-container *ngIf="revisi.isApproved; else approveButton">
                                 <button class="btn btn-danger cancel-button" (click)="onApproved(revisi)">
                                   <c-icon name="cil-trash"></c-icon> Cancel
@@ -69,12 +63,18 @@
                               </ng-template>
                             </c-col>
                           </c-row>
-                        
                     </ng-container>
                     
                     
                   </c-card-body>
                 </c-card>
+              </c-col>
+            </c-row>
+            <c-row class="mt-3">
+              <c-col class="d-flex justify-content-center">
+                <button cButton color="primary" (click)="saveRevisi()" [disabled]="!allItemsApproved()">
+                  Save
+                </button>
               </c-col>
             </c-row>
           </ng-container>

@@ -7,6 +7,7 @@ import { KategoriBarangService } from 'src/app/services/gs/kategori-barang.servi
 import { BalancingService } from 'src/app/services/pic-gudang/balancing.service'
 import Swal from 'sweetalert2';
 import { IBalancing } from 'src/app/interfaces/pic-gudang/balancing/i-balancing'
+import { ActivatedRoute, Router } from '@angular/router';
 
 function removeUnnecessaryProperties(obj: any): any {
   const { isApproved, selected, kategori, ...rest } = obj;
@@ -33,10 +34,26 @@ export class BalancingComponent implements OnInit{
 
   constructor(
     private kategoriBarangService: KategoriBarangService,
-    private balancingService: BalancingService) { }
+    private balancingService: BalancingService,
+    private router: Router,
+    private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.loadKategori();
+
+    this.route.queryParams.subscribe(queryParams => {
+      if (queryParams['tg']) {
+        this.selectedDate = queryParams['tg'];
+      }
+  
+      if (queryParams['kat']) {
+        this.selectedKategori = queryParams['kat'];
+      }
+
+      if (this.selectedDate && this.selectedKategori) {
+        this.loadBalancing();
+      }
+    });
   }
 
   loadKategori(): void {
@@ -178,6 +195,27 @@ export class BalancingComponent implements OnInit{
           icon: 'error'
         });
       }
+    });
+  }
+
+  convertToTimestamp(dateString: string): number {
+    const date = new Date(dateString);
+    return date.getTime();
+  }
+
+  goToRevisiOut(idBarangGudang: number, idDetailBalancing?: number): void {
+    const timestamp = this.convertToTimestamp(this.selectedDate);
+
+    this.router.navigate(['/picg/balancing/revisi-out', idBarangGudang], {
+      queryParams: {
+        kat: this.selectedKategori,
+        tg: timestamp,
+        idb: idDetailBalancing
+      }
+    }).then(() => {
+      console.log('Navigation to revisi-out complete');
+    }).catch(error => {
+      console.error('Navigation error:', error);
     });
   }
 }

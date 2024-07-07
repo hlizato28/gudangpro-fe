@@ -87,5 +87,10 @@ export class BalancingService {
     return this.http.get<ListDataResponse<IDetailBalancing>>(url, { params });
   }
 
+  revisiBalancing(id: number): Observable<any> {
+    const url = `${this.baseUrl}/${this.apiUrl}/revisi-balancing/save/${id}`;
+    return this.http.put(url, {});
+  }
+
 
 }

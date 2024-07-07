@@ -6,6 +6,9 @@ import { ListDataResponse } from 'src/app/interfaces/responses/list-data-respons
 import { KategoriBarangService } from 'src/app/services/gs/kategori-barang.service';
 import { BalancingService } from 'src/app/services/pic-gudang/balancing.service';
 import Swal from 'sweetalert2';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { RowInput, UserOptions } from 'jspdf-autotable';
 
 @Component({
   selector: 'app-hist-balancing',
@@ -103,63 +106,111 @@ export class HistBalancingComponent {
       }
     });
   }
-  
-  // async exportToPDF(): Promise<void> {
-  //   if (!this.selectedDate || !this.selectedKategori) {
-  //     Swal.fire('Error', 'Pilih tanggal dan kategori terlebih dahulu', 'error');
-  //     return;
-  //   }
-  
-  //   try {
-  //     const allData = await this.balancingService.getAllReport(this.selectedKategori, this.selectedDate, this.app, this.rj).toPromise();
-  
-  //     if (!allData || allData.length === 0) {
-  //       Swal.fire('Error', 'Tidak ada data untuk diekspor', 'error');
-  //       return;
-  //     }
-  
-  //     const content = this.generatePDFContent(allData);
-  //     const filename = `balancing_${this.selectedKategori}_${this.selectedDate}.pdf`;
-  //     this.exportToPdf.exportToPDF(content, filename);
-  //   } catch (error) {
-  //     console.error('Error exporting PDF:', error);
-  //     Swal.fire('Error', 'Terjadi kesalahan saat mengekspor PDF', 'error');
-  //   } finally {
-  //     // this.isLoading = false;
-  //   }
+
+  exportToPDF() {
+    if (!this.isDataLoaded) {
+      Swal.fire('Error', 'Data belum dimuat. Silakan muat data terlebih dahulu.', 'error');
+      return;
+    }
+
+    const pdf = new jsPDF('l', 'mm', 'a4');
+    const pageWidth = pdf.internal.pageSize.width;
+    const pageHeight = pdf.internal.pageSize.height;
+    
+    // Rata tengah judul
+    pdf.setFontSize(16);
+    const title = `Report Balancing (${this.selectedKategori})`;
+    const titleWidth = pdf.getStringUnitWidth(title) * pdf.getFontSize() / pdf.internal.scaleFactor;
+    pdf.text(title, (pageWidth - titleWidth) / 2, 15);
+    
+    // Rata tengah tanggal
+    pdf.setFontSize(10);
+    const date = `Date: ${this.selectedDate}`;
+    const dateWidth = pdf.getStringUnitWidth(date) * pdf.getFontSize() / pdf.internal.scaleFactor;
+    pdf.text(date, (pageWidth - dateWidth) / 2, 25);
+
+    const columns = [
+      'No.', 'Kode', 'Nama Barang', 'Stok Awal', 'Barang In', 'Barang Out', 'Stok Akhir', 
+      'OPR', 'UC', 'NC', 'KKB', 'DS', 'ASR'
+    ];
+
+    const data = this.getTableData();
+
+    // Hitung total lebar tabel
+    const columnWidths = [10, 20, 70, 20, 20, 20, 20, 10, 10, 10, 10, 10, 10];
+    const totalTableWidth = columnWidths.reduce((sum, width) => sum + width, 0);
+    
+    // Hitung posisi awal tabel (untuk membuatnya berada di tengah)
+    const startX = (pageWidth - totalTableWidth) / 2;
+
+    (pdf as any).autoTable({
+      head: [columns],
+      body: data,
+      startY: 35,
+      tableWidth: totalTableWidth,
+      margin: { left: startX },
+      styles: { fontSize: 8, cellPadding: 2 },
+      columnStyles: {
+        0: { cellWidth: 10 },  // No.
+        1: { cellWidth: 20 },  // Kode
+        2: { cellWidth: 70 },  // Nama Barang
+        3: { cellWidth: 20, halign: 'center' },  // Stok Awal
+        4: { cellWidth: 20, halign: 'center', fillColor: [220, 220, 220] },  // In
+        5: { cellWidth: 20, halign: 'center', fillColor: [220, 220, 220] },  // Out
+        6: { cellWidth: 20, halign: 'center' },  // Stok Akhir
+        7: { cellWidth: 10, fillColor: [200, 220, 255], halign: 'center' },  // OPR
+        8: { cellWidth: 10, fillColor: [200, 220, 255], halign: 'center' },  // UC
+        9: { cellWidth: 10, fillColor: [200, 220, 255], halign: 'center' },  // NC
+        10: { cellWidth: 10, fillColor: [200, 220, 255], halign: 'center' }, // KKB
+        11: { cellWidth: 10, fillColor: [200, 220, 255], halign: 'center' }, // DS
+        12: { cellWidth: 10, fillColor: [200, 220, 255], halign: 'center' }  // ASR
+      },
+      headStyles: {
+        fillColor: [51, 122, 183],
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      alternateRowStyles: {
+        fillColor: [245, 245, 245]
+      },
+      didDrawPage: () => {
+        // Tambahkan nomor halaman
+        let str = 'Page ' + pdf.getCurrentPageInfo().pageNumber;
+        pdf.setFontSize(10);
+        pdf.text(str, pageWidth - 20, pageHeight - 10, { align: 'right' });
+      }
+    } as UserOptions);
+
+    pdf.save(`balancing-report-${this.selectedKategori}-${this.selectedDate}.pdf`);
+  }
+
+
+  getTableData(): RowInput[] {
+    return this.reportList.map((item, index) => [
+      index + 1,
+      item.kodeBarang,
+      item.namaBarang,
+      item.stokAwal,
+      item.barangIn,
+      item.barangOut,
+      item.stokAhkhir,
+      item.opr,
+      item.uc,
+      item.nc,
+      item.kkb,
+      item.ds,
+      item.asr
+    ]);
+  }
+
+  onExportToPDF() {
+    if (!this.isDataLoaded) {
+      this.loadReportWithApprove();
+    }
+    this.exportToPDF();
   }
   
-  // private generatePDFContent(data: IReportBalancing[]): string {
-  //   return `
-  //     <div style="font-family: Arial, sans-serif;">
-  //       <h2>Balancing Item</h2>
-  //       <p>Tanggal: ${new Date(this.selectedDate).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-  //       <p>Kategori: ${this.selectedKategori}</p>
-  //       <table style="width: 100%; border-collapse: collapse;">
-  //         <!-- ... header tabel ... -->
-  //         <tbody>
-  //           ${data.map((item, index) => `
-  //             <tr>
-  //               <td style="border: 1px solid black; padding: 5px;">${index + 1}</td>
-  //               <td style="border: 1px solid black; padding: 5px;">${item.kodeBarang}</td>
-  //               <td style="border: 1px solid black; padding: 5px;">${item.namaBarang}</td>
-  //               <td style="border: 1px solid black; padding: 5px;">${item.stokAwal}</td>
-  //               <td style="border: 1px solid black; padding: 5px;">${item.barangIn}</td>
-  //               <td style="border: 1px solid black; padding: 5px;">${item.barangOut}</td>
-  //               <td style="border: 1px solid black; padding: 5px;">${item.stokAhkhir}</td>
-  //               <td style="border: 1px solid black; padding: 5px; background-color: #3c7ab7; color: white;">${item.opr}</td>
-  //               <td style="border: 1px solid black; padding: 5px; background-color: #3c7ab7; color: white;">${item.uc}</td>
-  //               <td style="border: 1px solid black; padding: 5px; background-color: #3c7ab7; color: white;">${item.nc}</td>
-  //               <td style="border: 1px solid black; padding: 5px; background-color: #3c7ab7; color: white;">${item.kkb}</td>
-  //               <td style="border: 1px solid black; padding: 5px; background-color: #3c7ab7; color: white;">${item.ds}</td>
-  //               <td style="border: 1px solid black; padding: 5px; background-color: #3c7ab7; color: white;">${item.asr}</td>
-  //             </tr>
-  //           `).join('')}
-  //         </tbody>
-  //       </table>
-  //     </div>
-  //   `;
-  // }
+}
 
 
 
