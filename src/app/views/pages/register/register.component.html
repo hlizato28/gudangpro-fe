@@ -4,33 +4,43 @@
       <c-col lg="7" md="9" xl="6">
         <c-card class="mx-4">
           <c-card-body class="p-4">
-            <form cForm>
+            <form cForm (ngSubmit)="onSubmit()">
               <h1>Register</h1>
-              <p class="text-medium-emphasis">Create your account</p>
               <c-input-group class="mb-3">
                 <span cInputGroupText>
                   <svg cIcon name="cilUser"></svg>
                 </span>
-                <input autoComplete="name" cFormControl placeholder="Username" />
-              </c-input-group>
-              <c-input-group class="mb-3">
-                <span cInputGroupText>@</span>
-                <input autoComplete="email" cFormControl placeholder="Email" />
+                <input 
+                  autoComplete="username" 
+                  cFormControl 
+                  placeholder="Username" 
+                  [(ngModel)]="registerData.username" 
+                  name="username"
+                  required 
+                />
               </c-input-group>
               <c-input-group class="mb-3">
                 <span cInputGroupText>
-                  <svg cIcon name="cilLockLocked"></svg>
                 </span>
-                <input autoComplete="new-password" cFormControl placeholder="Password" type="password" />
-              </c-input-group>
-              <c-input-group class="mb-4">
-                <span cInputGroupText>
-                  <svg cIcon name="cilLockLocked"></svg>
-                </span>
-                <input autoComplete="new-password" cFormControl placeholder="Repeat password" type="password" />
+                <select 
+                  [(ngModel)]="registerData.cabang" 
+                  name="cabang"
+                  aria-label="Cabang"
+                  cSelect
+                  cFormControl
+                  required
+                >
+                  <option value="" disabled selected>Pilih Cabang</option>
+                  <option 
+                    *ngFor="let cabang of cabangList" 
+                    [ngValue]="cabang">{{cabang}}
+                  </option>
+                </select>
               </c-input-group>
               <div class="d-grid">
-                <button cButton color="success">Create Account</button>
+                <button cButton color="success" type="submit" [disabled]="!registerData.username || !registerData.cabang">
+                  Create Account
+                </button>
               </div>
             </form>
           </c-card-body>

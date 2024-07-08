@@ -54,6 +54,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'uh',
+        loadChildren: () =>
+          import('./views/uh/uh.module').then(
+            (m) => m.UhModule
+          ),
+      },
+      {
         path: 'boh',
         loadChildren: () =>
           import('./views/boh/boh.module').then(

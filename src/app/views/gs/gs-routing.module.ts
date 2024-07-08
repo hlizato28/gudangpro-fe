@@ -66,10 +66,23 @@ const routes: Routes = [
       },
       {
         path: 'approval',
-        component: ApprovalComponent,
         data: {
           title: 'Approval Pengajuan'
-        }
+        },
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'app-kp',
+          },
+          {
+            path: 'app-kp',
+            component: ApprovalComponent,
+            data: {
+              title: 'Gudang KP'
+            }
+          },
+        ]
       }
     ],
   },

@@ -31,6 +31,16 @@ export class PengajuanGudangCabangService {
     return this.http.get<ListDataResponse<IPengajuanGudangCabang>>(url, { params });
   }
 
+  getDetailPengajuanByCabangKP(page: number, size: number): Observable<ListDataResponse<IPengajuanGudangCabang>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+  
+    let url = `${this.baseUrl}/${this.apiUrl}/detail-by-cabang/kp`;
+  
+    return this.http.get<ListDataResponse<IPengajuanGudangCabang>>(url, { params });
+  }
+
   getDetailPengajuanByUser(page: number, size: number): Observable<ListDataResponse<IDetailPengajuanGudangCabang>> {
     let params = new HttpParams()
       .set('page', page.toString())
@@ -55,6 +65,14 @@ export class PengajuanGudangCabangService {
     }
     
     return this.http.put(url, detailPengajuan).pipe(
+      // catchError(this.handleError)
+    );
+  }
+
+  approvalUH(id: number): Observable<any> {
+    let url = `${this.baseUrl}/${this.apiUrl}/approve-uh/${id}`;
+    
+    return this.http.put(url, {}).pipe(
       // catchError(this.handleError)
     );
   }

@@ -2,7 +2,6 @@ import { HttpParams } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IPengajuanGudangCabang } from 'src/app/interfaces/pemohon/i-pengajuan-gudang-cabang';
-import { GenericDataResponse } from 'src/app/interfaces/responses/generic-data-response';
 import { ListDataResponse } from 'src/app/interfaces/responses/list-data-response';
 import { PengajuanGudangCabangService } from 'src/app/services/pemohon/pengajuan-gudang-cabang.service';
 

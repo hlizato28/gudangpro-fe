@@ -76,7 +76,17 @@ export const navItems: INavData[] = [
   {
     name: 'Approval Pengajuan',
     url: '/gs/approval',
-    iconComponent: { name: 'cil-drop' }
+    iconComponent: { name: 'cil-drop' },
+    children: [
+      {
+        name: 'Gudang KP',
+        url: '/gs/approval/app-kp'
+      },
+      // {
+      //   name: 'Setting Semua Cabang',
+      //   url: '/gs/cabang/semua'
+      // }
+    ]
   },
   {
     title: true,
@@ -92,11 +102,11 @@ export const navItems: INavData[] = [
     url: '/picg/approve-pengajuan',
     iconComponent: { name: 'cil-drop' }
   },
-  {
-    name: 'Input Item Masuk',
-    url: '/picg/input-item',
-    iconComponent: { name: 'cil-drop' }
-  },
+  // {
+  //   name: 'Input Item Masuk',
+  //   url: '/picg/input-item',
+  //   iconComponent: { name: 'cil-drop' }
+  // },
   {
     name: 'Balancing',
     url: '/picg/balancing',
@@ -112,16 +122,16 @@ export const navItems: INavData[] = [
       }
     ]
   },
-  {
-    name: 'Pengajuan GS',
-    url: '/picg/pengajuan-gs',
-    iconComponent: { name: 'cil-drop' }
-  },
-  {
-    name: 'History',
-    url: '/picg/history',
-    iconComponent: { name: 'cil-drop' }
-  },
+  // {
+  //   name: 'Pengajuan GS',
+  //   url: '/picg/pengajuan-gs',
+  //   iconComponent: { name: 'cil-drop' }
+  // },
+  // {
+  //   name: 'History',
+  //   url: '/picg/history',
+  //   iconComponent: { name: 'cil-drop' }
+  // },
   {
     title: true,
     name: 'BOH'
@@ -155,6 +165,15 @@ export const navItems: INavData[] = [
         url: '/boh/history/balancing'
       },
     ]
+  },
+  {
+    title: true,
+    name: 'Unit Head'
+  },
+  {
+    name: 'Approval Pengajuan',
+    url: '/uh/approve-uh',
+    iconComponent: { name: 'cil-drop' }
   },
   {
     title: true,
